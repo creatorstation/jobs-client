@@ -75,6 +75,7 @@ export default function SocialMediaManager() {
       .then((response) => {
         console.log(response);
         toast("Application submitted successfully!", { type: "success" });
+        window.location.href = "https://creatorstation.com/";
       })
       .catch((error) => {
         console.error(error);
