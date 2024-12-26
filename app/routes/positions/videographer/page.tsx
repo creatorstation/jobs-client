@@ -6,8 +6,6 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 
-const redirectUri = "http://localhost:5173/videographer";
-
 export function meta({}: Route.MetaArgs) {
   return [
     { title: "CreatorStation | Videographer" },
@@ -30,16 +28,11 @@ export default function Videographer() {
     linkedin?: string;
   } | null>(null);
 
-  const [isAuthorized, setIsAuthorized] = useState(false);
-  const [firstName, setFirstName] = useState<string | null>(null);
-  const [lastName, setLastName] = useState<string | null>(null);
-  const [profileURL, setProfileURL] = useState<string | null>(null);
-  const [pictureURL, setPictureURL] = useState<string | null>(null);
-
   const {
     register,
     handleSubmit,
     setValue,
+    trigger,
     formState: { errors, isValid },
   } = useForm<{
     name: string;
@@ -81,11 +74,13 @@ export default function Videographer() {
       )
       .then((response) => {
         console.log(response);
-        toast("Başvurunuz başarıyla alındı!", { type: "success" });
+        toast("Application submitted successfully!", { type: "success" });
       })
       .catch((error) => {
         console.error(error);
-        toast("Başvurunuz alınırken bir hata oluştu.", { type: "error" });
+        toast("An error occurred while submitting the application.", {
+          type: "error",
+        });
       });
   };
 
@@ -115,6 +110,7 @@ export default function Videographer() {
             "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
         ) {
           setValue("cv", files as unknown as FileList);
+          trigger("cv");
           console.log("Files dropped:", files);
           const reader = new FileReader();
           reader.onload = (e) => {
@@ -122,13 +118,13 @@ export default function Videographer() {
           };
           reader.readAsDataURL(file);
         } else {
-          toast("Sadece PDF ve DOCX formatında dosya yükleyebilirsiniz.", {
+          toast("Only PDF and DOCX files are supported.", {
             type: "error",
           });
         }
       }
     },
-    [setValue]
+    [setValue, trigger]
   );
 
   const handleDragOver = (event: React.DragEvent<HTMLDivElement>) => {
@@ -233,29 +229,34 @@ export default function Videographer() {
 
       <div className="text-center">
         {!userData ? (
-          <GoogleLogin
-            size="large"
-            onSuccess={(credentialResponse) => {
-              console.log(credentialResponse);
-              const decoded = jwtDecode<any>(
-                credentialResponse.credential as string
-              );
-              setUserData(decoded);
-              toast("Başarıyla giriş yaptınız!", { type: "success" });
-            }}
-            onError={() => {
-              toast("Giriş yaparken bir hata oluştu.", { type: "error" });
-            }}
-            useOneTap={true}
-            text="continue_with"
-          />
+          <>
+            <div className="mb-4">
+              <strong>To apply, please sign in below:</strong>
+            </div>
+            <GoogleLogin
+              size="large"
+              onSuccess={(credentialResponse) => {
+                console.log(credentialResponse);
+                const decoded = jwtDecode<any>(
+                  credentialResponse.credential as string
+                );
+                setUserData(decoded);
+                toast("Signed in successfully!", { type: "success" });
+              }}
+              onError={() => {
+                toast("An error occurred while signing in.", { type: "error" });
+              }}
+              useOneTap={true}
+              text="continue_with"
+            />
+          </>
         ) : (
           <form onSubmit={handleSubmit(onSubmit)}>
             <input
               type="text"
-              {...register("name", { required: "İsim gereklidir" })}
+              {...register("name", { required: "Name is required" })}
               className="block w-full p-2 mb-4 border rounded"
-              placeholder="İsim"
+              placeholder="Name"
             />
             {errors.name && (
               <p className="text-red-500">{errors.name.message}</p>
@@ -263,14 +264,14 @@ export default function Videographer() {
             <input
               type="email"
               {...register("email", {
-                required: "Email adresi gereklidir",
+                required: "Email is required",
                 pattern: {
                   value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/,
-                  message: "Geçersiz email adresi",
+                  message: "Invalid email address",
                 },
               })}
               className="block w-full p-2 mb-4 border rounded"
-              placeholder="Email Adresi"
+              placeholder="Email Address"
             />
             {errors.email && (
               <p className="text-red-500">{errors.email.message}</p>
@@ -279,7 +280,7 @@ export default function Videographer() {
               type="tel"
               {...register("phone")}
               className="block w-full p-2 mb-2 border rounded"
-              placeholder="Telefon Numarası"
+              placeholder="Mobile Phone Number"
             />
             <p className="text-gray-500 text-sm mb-2">Format: +905441112222</p>
             {errors.phone && (
@@ -291,10 +292,10 @@ export default function Videographer() {
               onClick={handleClick}
               className="mb-4 p-4 border-dashed border-2 border-gray-300 rounded cursor-pointer bg-gray-100 hover:bg-gray-200"
             >
-              <p>CV yüklemek için dosyayı buraya sürükleyin ya da tıklayın</p>
+              <p>Drag and drop your CV here or click to upload. (PDF or Doc)</p>
               <input
                 type="file"
-                {...register("cv", { required: "CV yüklemek gereklidir" })}
+                {...register("cv", { required: "CV is required" })}
                 ref={fileInputRef}
                 className="hidden"
                 accept=".pdf, .docx"
@@ -308,6 +309,7 @@ export default function Videographer() {
                         "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
                     ) {
                       setValue("cv", files as unknown as FileList);
+                      trigger("cv"); // Trigger validation for CV
                       console.log("File selected:", files);
                       const reader = new FileReader();
                       reader.onload = (e) => {
@@ -315,41 +317,42 @@ export default function Videographer() {
                       };
                       reader.readAsDataURL(file);
                     } else {
-                      toast(
-                        "Sadece PDF ve DOCX formatında dosya yükleyebilirsiniz.",
-                        { type: "error" }
-                      );
+                      toast("Only PDF and DOCX files are supported.", {
+                        type: "error",
+                      });
                       e.target.value = "";
                     }
                   }
                 }}
               />
             </div>
-            {errors.cv && <p className="text-red-500">{errors.cv.message}</p>}
+            {errors.cv && (
+              <p className="text-red-500">Uploading a CV is required.</p>
+            )}
             {filePreview && (
               <div className="mt-2">
-                <p>Önizleme:</p>
+                <p>Preview:</p>
                 {filePreview.startsWith("data:application/pdf") ? (
                   <iframe
                     src={filePreview}
                     className="w-full h-64 border rounded"
                   />
                 ) : (
-                  <p>Dosya önizlemesi desteklenmiyor.</p>
+                  <p>File type not supported for preview.</p>
                 )}
               </div>
             )}
             <div className="mb-4 mt-4">
               <label className="block mb-2">
-                İstanbul'da Avrupa yakasında mısın?
+                Are you currently living on the European side of Istanbul?
               </label>
               <select
-                {...register("europeSide", { required: "Bu alan gereklidir" })}
+                {...register("europeSide", { required: "Please select" })}
                 className="block w-full p-2 border rounded"
               >
-                <option value="">Seçiniz</option>
-                <option value="evet">Evet</option>
-                <option value="hayir">Hayır</option>
+                <option value="">Select</option>
+                <option value="evet">Yes</option>
+                <option value="hayir">No</option>
               </select>
               {errors.europeSide && (
                 <p className="text-red-500">{errors.europeSide.message}</p>
@@ -358,9 +361,9 @@ export default function Videographer() {
 
             <input
               type="text"
-              {...register("semt", { required: "Semt gereklidir" })}
+              {...register("semt", { required: "District is required" })}
               className="block w-full p-2 mb-4 border rounded"
-              placeholder="Semt"
+              placeholder="District (Ex: Kadıköy)"
             />
             {errors.semt && (
               <p className="text-red-500">{errors.semt.message}</p>
@@ -368,15 +371,14 @@ export default function Videographer() {
             <input
               type="url"
               {...register("linkedin", {
-                required: "LinkedIn sayfanız gereklidir",
                 pattern: {
                   value:
                     /^https:\/\/www\.linkedin\.com\/in\/[a-zA-Z0-9_-]+\/?$/,
-                  message: "Geçersiz LinkedIn URL'si",
+                  message: "Invalid LinkedIn URL",
                 },
               })}
               className="block w-full p-2 mb-4 border rounded"
-              placeholder="LinkedIn Sayfanız"
+              placeholder="LinkedIn Profile URL"
             />
             {errors.linkedin && (
               <p className="text-red-500">{errors.linkedin.message}</p>
@@ -390,26 +392,9 @@ export default function Videographer() {
               }`}
               disabled={!isValid}
             >
-              Başvuru Yap
+              Apply for Videographer
             </button>
           </form>
-        )}
-        {isAuthorized && (
-          <div className="mt-4">
-            <p>
-              Welcome, {firstName} {lastName}!
-            </p>
-            <a
-              href={profileURL as string}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              View LinkedIn Profile
-            </a>
-            {pictureURL && (
-              <img src={pictureURL} alt="Profile" className="mt-2" />
-            )}
-          </div>
         )}
       </div>
     </main>
