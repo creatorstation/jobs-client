@@ -5,7 +5,6 @@ import { jwtDecode } from "jwt-decode";
 import { useState, useEffect, useCallback, useRef } from "react";
 import { useForm } from "react-hook-form";
 import axios from "axios";
-import _ from "lodash";
 
 const redirectUri = "http://localhost:5173/videographer";
 
@@ -141,52 +140,6 @@ export default function Videographer() {
       fileInputRef.current.click();
     }
   };
-
-  const handlePostMessage = (event: MessageEvent) => {
-    if (event.data.type === "profile") {
-      updateProfile(event.data.profile);
-      toast("Başarıyla giriş yaptınız!", { type: "success" });
-    }
-  };
-
-  const updateProfile = (profile: any) => {
-    console.log(profile);
-    setIsAuthorized(true);
-    setFirstName(_.get(profile, "localizedFirstName", ""));
-    setLastName(_.get(profile, "localizedLastName", ""));
-    setProfileURL(
-      `https://www.linkedin.com/in/${_.get(profile, "vanityName", "")}`
-    );
-    setPictureURL(
-      _.get(
-        _.last(_.get(profile, "profilePicture.displayImage~.elements", "")),
-        "identifiers[0].identifier",
-        ""
-      )
-    );
-  };
-
-  const requestProfile = () => {
-    const oauthUrl = `https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=77bdm9yb1yeig5&scope=r_liteprofile&state=123456&redirect_uri=${encodeURIComponent(
-      redirectUri
-    )}`;
-    const width = 450,
-      height = 730,
-      left = window.screen.width / 2 - width / 2,
-      top = window.screen.height / 2 - height / 2;
-    window.open(
-      oauthUrl,
-      "Linkedin",
-      `menubar=no,location=no,resizable=no,scrollbars=no,status=no, width=${width}, height=${height}, top=${top}, left=${left}`
-    );
-  };
-
-  useEffect(() => {
-    window.addEventListener("message", handlePostMessage);
-    return () => {
-      window.removeEventListener("message", handlePostMessage);
-    };
-  }, []);
 
   return (
     <main className="max-w-4xl mx-auto p-6 bg-white shadow-md rounded-lg">
@@ -441,12 +394,6 @@ export default function Videographer() {
             </button>
           </form>
         )}
-        {/* <button
-          onClick={requestProfile}
-          className="mt-4 p-2 bg-blue-500 text-white rounded"
-        >
-          Linkedin Login
-        </button> */}
         {isAuthorized && (
           <div className="mt-4">
             <p>
