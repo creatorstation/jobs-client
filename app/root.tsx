@@ -47,7 +47,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
 export default function App() {
   return (
     <GoogleOAuthProvider clientId="449168770512-l9pntbnmfufur0gm5gio4s5l2gd6blu5.apps.googleusercontent.com">
-      <Outlet />;
+      <Outlet />
       <ToastContainer />
     </GoogleOAuthProvider>
   );
