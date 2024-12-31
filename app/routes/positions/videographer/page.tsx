@@ -48,6 +48,8 @@ export default function Videographer() {
     mode: "all",
   });
 
+  const [uploadProgress, setUploadProgress] = useState<number>(0);
+
   const onSubmit = (data: {
     name: string;
     email: string;
@@ -72,11 +74,22 @@ export default function Videographer() {
     axios
       .post(
         "https://auto.creatorstation.com/webhook/3e4a79e8-a76b-4458-93a9-7e760f266c07",
-        formData
+        formData,
+        {
+          onUploadProgress: (progressEvent) => {
+            const percentCompleted = Math.round(
+              (progressEvent.loaded * 100) / (progressEvent.total || 1)
+            );
+            setUploadProgress(percentCompleted);
+          },
+        }
       )
-      .then((response) => {
+      .then(async (response) => {
         console.log(response);
         toast("Application submitted successfully!", { type: "success" });
+
+        await new Promise((resolve) => setTimeout(resolve, 3000));
+
         window.location.href = "https://creatorstation.com/";
       })
       .catch((error) => {
@@ -398,6 +411,15 @@ export default function Videographer() {
               </div>
             )}
 
+            {uploadProgress > 0 && (
+              <div className="w-full bg-gray-200 rounded-full h-2.5 mb-4">
+                <div
+                  className="bg-blue-500 h-2.5 rounded-full"
+                  style={{ width: `${uploadProgress}%` }}
+                ></div>
+              </div>
+            )}
+
             <div className="mb-4 mt-4">
               <label className="block mb-2">
                 Are you currently living on the European side of Istanbul?
@@ -447,11 +469,11 @@ export default function Videographer() {
             <button
               type="submit"
               className={`p-2 rounded ${
-                isValid
+                isValid && uploadProgress === 0
                   ? "bg-blue-500 text-white"
                   : "bg-gray-400 text-gray-700 cursor-not-allowed"
               }`}
-              disabled={!isValid}
+              disabled={!isValid || uploadProgress > 0}
             >
               Apply for Videographer
             </button>
