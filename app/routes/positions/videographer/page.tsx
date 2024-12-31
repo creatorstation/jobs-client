@@ -2,9 +2,11 @@ import { GoogleLogin } from "@react-oauth/google";
 import type { Route } from "./+types/page";
 import { toast } from "react-toastify";
 import { jwtDecode } from "jwt-decode";
+
 import { useState, useEffect, useCallback, useRef } from "react";
 import { useForm } from "react-hook-form";
 import axios from "axios";
+import LinkedInLogin from "~/components/LinkedinButton";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -138,6 +140,41 @@ export default function Videographer() {
     }
   };
 
+  // LinkedIn: handle success code from the redirect.
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const code = urlParams.get("code");
+    if (code) {
+      axios
+        .get("http://localhost:3000/api/auth/linkedin", {
+          params: {
+            code,
+            redirect_uri: redirectUri,
+          },
+        })
+        .then((response) => {
+          const { data } = response;
+          setUserData({
+            email: data.email,
+            name: data.name,
+          });
+          toast("Signed in successfully!", { type: "success" });
+        })
+        .catch((error) => {
+          window.history.replaceState(
+            {},
+            document.title,
+            window.location.pathname
+          );
+        });
+    }
+  }, []);
+
+  const redirectUri =
+    typeof window !== "undefined"
+      ? `${window.location.origin}/videographer`
+      : "";
+
   return (
     <main className="max-w-4xl mx-auto p-6 bg-white shadow-md rounded-lg">
       <h1 className="text-3xl font-bold mb-4 text-center">Videographer</h1>
@@ -234,6 +271,7 @@ export default function Videographer() {
             <div className="mb-4">
               <strong>To apply, please sign in below:</strong>
             </div>
+            {/* --- Google Login --- */}
             <GoogleLogin
               size="large"
               onSuccess={(credentialResponse) => {
@@ -250,6 +288,11 @@ export default function Videographer() {
               useOneTap={true}
               text="continue_with"
             />
+
+            {/* --- LinkedIn Login (Custom Component) --- */}
+            <div className="mt-4">
+              <LinkedInLogin />
+            </div>
           </>
         ) : (
           <form onSubmit={handleSubmit(onSubmit)}>
@@ -262,6 +305,7 @@ export default function Videographer() {
             {errors.name && (
               <p className="text-red-500">{errors.name.message}</p>
             )}
+
             <input
               type="email"
               {...register("email", {
@@ -277,6 +321,7 @@ export default function Videographer() {
             {errors.email && (
               <p className="text-red-500">{errors.email.message}</p>
             )}
+
             <input
               type="tel"
               {...register("phone", {
@@ -289,6 +334,7 @@ export default function Videographer() {
             {errors.phone && (
               <p className="text-red-500">{errors.phone.message}</p>
             )}
+
             <div
               onDrop={handleDrop}
               onDragOver={handleDragOver}
@@ -332,6 +378,7 @@ export default function Videographer() {
             {errors.cv && (
               <p className="text-red-500">Uploading a CV is required.</p>
             )}
+
             {filePreview && (
               <div className="mt-2">
                 <p>Preview:</p>
@@ -345,6 +392,7 @@ export default function Videographer() {
                 )}
               </div>
             )}
+
             <div className="mb-4 mt-4">
               <label className="block mb-2">
                 Are you currently living on the European side of Istanbul?
@@ -371,6 +419,7 @@ export default function Videographer() {
             {errors.semt && (
               <p className="text-red-500">{errors.semt.message}</p>
             )}
+
             <input
               type="url"
               {...register("linkedin", {
@@ -381,11 +430,15 @@ export default function Videographer() {
                 },
               })}
               className="block w-full p-2 mb-4 border rounded"
-              placeholder="LinkedIn Profile URL"
+              placeholder="LinkedIn Profile URL (Optional)"
             />
             {errors.linkedin && (
               <p className="text-red-500">{errors.linkedin.message}</p>
             )}
+            {errors.linkedin && (
+              <p className="text-red-500">{errors.linkedin.message}</p>
+            )}
+
             <button
               type="submit"
               className={`p-2 rounded ${
