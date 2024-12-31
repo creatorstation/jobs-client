@@ -185,16 +185,21 @@ export default function Videographer() {
           management, specializing in managing top Turkish YouTube channels
           across various categories such as entertainment, gaming, education,
           style, beauty, and travel. We produce top-notch content for these
-          channels. We are currently seeking an Account Manager to join our
-          team. For a glimpse into our work, visit our Instagram @creatorstation
-          and our YouTube channel: Youtuber Durağı.
+          channels.
         </p>
         <p className="text-gray-700 mt-4">
           We are looking for a talented Videographer, both skilled in shooting
           and editing with particular expertise in 2D compositing and green
           screen technology, to join our team in İstanbul. Check out our
-          Instagram @creatorstation and our YouTube channel: Youtuber Durağı to
-          see how we work.
+          Instagram{" "}
+          <a className="text-blue-500" href="https://crst.io/ig">
+            @creatorstation
+          </a>{" "}
+          and our YouTube channel:{" "}
+          <a className="text-blue-500" href="https://crst.io/ig">
+            Youtuber Durağı
+          </a>{" "}
+          to see how we work.
         </p>
       </section>
 
