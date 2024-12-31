@@ -279,7 +279,9 @@ export default function Videographer() {
             )}
             <input
               type="tel"
-              {...register("phone")}
+              {...register("phone", {
+                required: "Phone number is required",
+              })}
               className="block w-full p-2 mb-2 border rounded"
               placeholder="Mobile Phone Number"
             />
