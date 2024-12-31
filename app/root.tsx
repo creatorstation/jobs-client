@@ -11,7 +11,6 @@ import type { Route } from "./+types/root";
 import stylesheet from "./app.css?url";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { ToastContainer } from "react-toastify";
-import "react-phone-number-input/style.css";
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -47,10 +46,17 @@ export function Layout({ children }: { children: React.ReactNode }) {
 
 export default function App() {
   return (
-    <GoogleOAuthProvider clientId="449168770512-l9pntbnmfufur0gm5gio4s5l2gd6blu5.apps.googleusercontent.com">
+    <div>
+      <div className="flex justify-center items-center h-16">
+        <img
+        className="w-64"
+        src="/logo-small.png" alt="CreatorStation logo" />
+      </div>
+      <GoogleOAuthProvider clientId="449168770512-l9pntbnmfufur0gm5gio4s5l2gd6blu5.apps.googleusercontent.com">
       <Outlet />
       <ToastContainer />
     </GoogleOAuthProvider>
+    </div>
   );
 }
 
