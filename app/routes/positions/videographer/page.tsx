@@ -179,6 +179,8 @@ export default function Videographer() {
             document.title,
             window.location.pathname
           );
+
+          window.location.reload();
         });
     }
   }, []);
