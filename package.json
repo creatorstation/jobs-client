@@ -14,14 +14,17 @@
     "@react-router/node": "^7.1.1",
     "@react-router/serve": "^7.1.1",
     "axios": "^1.7.9",
+    "cross-env": "^7.0.3",
     "isbot": "^5.1.17",
     "jwt-decode": "^4.0.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-hook-form": "^7.54.2",
+    "react-linkedin-login-oauth2": "^2.0.1",
+    "react-phone-input-2": "^2.15.1",
+    "react-phone-number-input": "^3.4.10",
     "react-router": "^7.1.1",
-    "react-toastify": "^11.0.2",
-    "cross-env": "^7.0.3"
+    "react-toastify": "^11.0.2"
   },
   "devDependencies": {
     "@react-router/dev": "^7.1.1",
