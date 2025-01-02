@@ -340,7 +340,7 @@ export default function Videographer() {
               )}
 
               <PhoneInput
-                className="block w-full p-2 mb-4 border rounded"
+                className="w-full p-2 mb-4 border rounded"
                 inputStyle={{ border: "none", width: "100%", fontSize: "1rem" }}
                 countrySelectorStyleProps={{
                   buttonStyle: {
