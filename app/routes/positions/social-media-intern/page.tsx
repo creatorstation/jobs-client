@@ -532,7 +532,7 @@ export default function SocialMediaIntern() {
                         {...register("workDays", {
                           required: "Please select at least one day",
                         })}
-                        className="form-checkbox w-10 h-10"
+                        className="form-checkbox w-8 h-8 sm:w-6 sm:h-6"
                       />
                       <span>{day}</span>
                     </label>
