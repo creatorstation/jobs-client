@@ -62,10 +62,6 @@ export default function ProductionAssistant() {
     formData.append("linkedin", data.linkedin);
     formData.append("position", "Production Assistant");
 
-    console.log(formData);
-
-    return;
-
     axios
       .post(
         "https://auto.creatorstation.com/webhook/3e4a79e8-a76b-4458-93a9-7e760f266c07",
@@ -379,7 +375,7 @@ export default function ProductionAssistant() {
                 <p className="text-red-500">{errors.email.message}</p>
               )}
               <PhoneInput
-                className="block w-full p-2 mb-4 border rounded text-red-500"
+                className="block w-full p-2 mb-4 border rounded"
                 inputStyle={{ border: "none", width: "100%", fontSize: "1rem" }}
                 countrySelectorStyleProps={{
                   buttonStyle: {
