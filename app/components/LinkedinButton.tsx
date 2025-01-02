@@ -1,8 +1,12 @@
-export default function LinkedInLogin() {
+export interface LinkedInLoginProps {
+  redirPath: string;
+}
+
+export default function LinkedInLogin({ redirPath }: LinkedInLoginProps) {
   const redirectToLinkedIn = () => {
     const clientId = "77bdm9yb1yeig5";
     const redirectUri = encodeURIComponent(
-      `${window.location.origin}/videographer`
+      `${window.location.origin}/${redirPath}`
     );
     const state = Math.random().toString(36).substring(2);
     const scope = "email openid profile ";

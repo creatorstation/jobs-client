@@ -311,7 +311,7 @@ export default function Videographer() {
 
             {/* --- LinkedIn Login (Custom Component) --- */}
             <div className="mt-4">
-              <LinkedInLogin />
+              <LinkedInLogin redirPath="videographer" />
             </div>
           </>
         ) : (
