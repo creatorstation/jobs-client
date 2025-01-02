@@ -17,44 +17,32 @@ export function meta({}: Route.MetaArgs) {
   ];
 }
 
+type UserData = {
+  name: string;
+  email: string;
+  phone: string;
+  cv: FileList;
+  europeSide: string;
+  semt: string;
+  linkedin: string;
+};
+
 export default function SocialMediaManager() {
-  const [userData, setUserData] = useState<{
-    name: string;
-    email: string;
-    phone?: string;
-    cv?: FileList;
-    europeSide?: string;
-    semt?: string;
-    linkedin?: string;
-  } | null>(null);
+  const [userData, setUserData] = useState<Partial<UserData> | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
   const {
     register,
     handleSubmit,
     setValue,
     formState: { errors, isValid },
-    trigger, // Add trigger to manually trigger validation
-  } = useForm<{
-    name: string;
-    email: string;
-    phone: string;
-    cv: FileList;
-    europeSide: string;
-    semt: string;
-    linkedin: string;
-  }>({
+    trigger,
+  } = useForm<UserData>({
     mode: "all",
   });
 
-  const onSubmit = (data: {
-    name: string;
-    email: string;
-    phone: string;
-    cv: FileList;
-    europeSide: string;
-    semt: string;
-    linkedin: string;
-  }) => {
+  const onSubmit = (data: UserData) => {
+    setIsSubmitting(true); // Disable the button
     setUserData(data);
 
     const formData = new FormData();
@@ -87,8 +75,8 @@ export default function SocialMediaManager() {
 
   useEffect(() => {
     if (userData) {
-      setValue("name", userData.name);
-      setValue("email", userData.email);
+      setValue("name", userData.name as string);
+      setValue("email", userData.email as string);
       if (userData.phone) setValue("phone", userData.phone);
       if (userData.europeSide) setValue("europeSide", userData.europeSide);
       if (userData.semt) setValue("semt", userData.semt);
@@ -407,11 +395,11 @@ export default function SocialMediaManager() {
               <button
                 type="submit"
                 className={`p-2 rounded ${
-                  isValid
+                  isValid && !isSubmitting
                     ? "bg-blue-500 text-white"
                     : "bg-gray-400 text-gray-700 cursor-not-allowed"
                 }`}
-                disabled={!isValid}
+                disabled={isSubmitting || !isValid}
               >
                 Apply for Social Media Manager
               </button>

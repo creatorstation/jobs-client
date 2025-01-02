@@ -34,6 +34,7 @@ type UserData = {
 
 export default function SocialMediaIntern() {
   const [userData, setUserData] = useState<Partial<UserData> | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
   const {
     register,
@@ -48,6 +49,8 @@ export default function SocialMediaIntern() {
   const [uploadProgress, setUploadProgress] = useState<number>(0);
 
   const onSubmit = (data: UserData) => {
+    setIsSubmitting(true); // Disable the button
+
     const dayMapping: Record<string, string> = {
       Monday: "Pazartesi",
       Tuesday: "Salı",
@@ -99,6 +102,7 @@ export default function SocialMediaIntern() {
         toast("An error occurred while submitting the application.", {
           type: "error",
         });
+        setIsSubmitting(false); // Re-enable the button if there's an error
       });
   };
 
@@ -555,11 +559,11 @@ export default function SocialMediaIntern() {
               <button
                 type="submit"
                 className={`p-2 rounded ${
-                  isValid && uploadProgress === 0
+                  isValid && !isSubmitting
                     ? "bg-blue-500 text-white"
                     : "bg-gray-400 text-gray-700 cursor-not-allowed"
                 }`}
-                disabled={!isValid || uploadProgress > 0}
+                disabled={isSubmitting || !isValid}
               >
                 Apply for Social Media Intern
               </button>

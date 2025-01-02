@@ -31,6 +31,7 @@ type UserData = {
 
 export default function Videographer() {
   const [userData, setUserData] = useState<Partial<UserData> | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
   const {
     register,
@@ -45,6 +46,7 @@ export default function Videographer() {
   const [uploadProgress, setUploadProgress] = useState<number>(0);
 
   const onSubmit = (data: UserData) => {
+    setIsSubmitting(true);
     setUserData(data);
 
     const formData = new FormData();
@@ -83,6 +85,7 @@ export default function Videographer() {
         toast("An error occurred while submitting the application.", {
           type: "error",
         });
+        setIsSubmitting(false);
       });
   };
 
@@ -462,11 +465,11 @@ export default function Videographer() {
               <button
                 type="submit"
                 className={`p-2 rounded ${
-                  isValid && uploadProgress === 0
+                  (isValid && !isSubmitting)
                     ? "bg-blue-500 text-white"
                     : "bg-gray-400 text-gray-700 cursor-not-allowed"
                 }`}
-                disabled={!isValid || uploadProgress > 0}
+                disabled={isSubmitting || !isValid}
               >
                 Apply for Videographer
               </button>
