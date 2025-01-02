@@ -5,6 +5,8 @@ import { jwtDecode } from "jwt-decode";
 import { useState, useEffect, useCallback, useRef } from "react";
 import { useForm } from "react-hook-form";
 import axios from "axios";
+import { PhoneInput } from "react-international-phone";
+import { isPhoneValid } from "~/helpers/isPhoneValid";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -30,6 +32,7 @@ type UserData = {
 export default function SocialMediaManager() {
   const [userData, setUserData] = useState<Partial<UserData> | null>(null);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const isValidPh = isPhoneValid(userData?.phone || "");
 
   const {
     register,
@@ -48,7 +51,7 @@ export default function SocialMediaManager() {
     const formData = new FormData();
     formData.append("name", data.name);
     formData.append("email", data.email);
-    formData.append("phone", data.phone);
+    formData.append("phone", data.phone.replace(/\s/g, ""));
     formData.append("europeSide", data.europeSide);
     formData.append("semt", data.semt);
     formData.append("cv", data.cv[0]);
@@ -279,20 +282,28 @@ export default function SocialMediaManager() {
               {errors.email && (
                 <p className="text-red-500">{errors.email.message}</p>
               )}
-              <input
-                type="tel"
-                {...register("phone", {
-                  required: "Phone number is required",
-                })}
-                className="block w-full p-2 mb-2 border rounded"
-                placeholder="Mobile Phone Number"
+              <PhoneInput
+                className="block w-full p-2 mb-4 border rounded"
+                inputStyle={{ border: "none", width: "100%", fontSize: "1rem" }}
+                countrySelectorStyleProps={{
+                  buttonStyle: {
+                    border: "none",
+                  },
+                }}
+                defaultCountry="tr"
+                value={userData?.phone || ""}
+                onChange={(phone) => {
+                  setUserData((prev) => ({ ...prev, phone }));
+                  setValue("phone", phone);
+                  trigger("phone");
+                }}
               />
-              <p className="text-gray-500 text-sm mb-2">
-                Format: +905441112222
-              </p>
-              {errors.phone && (
-                <p className="text-red-500">{errors.phone.message}</p>
+              {!isValidPh && (
+                <p className="text-red-500">
+                  Please enter a valid phone number.
+                </p>
               )}
+
               <div
                 onDrop={handleDrop}
                 onDragOver={handleDragOver}
@@ -395,11 +406,11 @@ export default function SocialMediaManager() {
               <button
                 type="submit"
                 className={`p-2 rounded ${
-                  isValid && !isSubmitting
+                  isValid && !isSubmitting && isValidPh
                     ? "bg-blue-500 text-white"
                     : "bg-gray-400 text-gray-700 cursor-not-allowed"
                 }`}
-                disabled={isSubmitting || !isValid}
+                disabled={isSubmitting || !isValid || !isValidPh}
               >
                 Apply for Social Media Manager
               </button>
