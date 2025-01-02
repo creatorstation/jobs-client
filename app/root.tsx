@@ -34,6 +34,19 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <Meta />
         <Links />
+        <script>
+          {`
+            (function (c, s, q, u, a, r, e) {
+              c.hj=c.hj||function(){(c.hj.q=c.hj.q||[]).push(arguments)};
+              c._hjSettings = { hjid: a };
+              r = s.getElementsByTagName('head')[0];
+              e = s.createElement('script');
+              e.async = true;
+              e.src = q + c._hjSettings.hjid + u;
+              r.appendChild(e);
+            })(window, document, 'https://static.hj.contentsquare.net/c/csq-', '.js', 5254741);
+          `}
+        </script>
       </head>
       <body>
         {children}
@@ -48,14 +61,12 @@ export default function App() {
   return (
     <div>
       <div className="flex justify-center items-center h-16">
-        <img
-        className="w-64"
-        src="/logo-small.png" alt="CreatorStation logo" />
+        <img className="w-64" src="/logo-small.png" alt="CreatorStation logo" />
       </div>
       <GoogleOAuthProvider clientId="449168770512-l9pntbnmfufur0gm5gio4s5l2gd6blu5.apps.googleusercontent.com">
-      <Outlet />
-      <ToastContainer />
-    </GoogleOAuthProvider>
+        <Outlet />
+        <ToastContainer />
+      </GoogleOAuthProvider>
     </div>
   );
 }
