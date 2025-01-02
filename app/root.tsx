@@ -11,6 +11,7 @@ import type { Route } from "./+types/root";
 import stylesheet from "./app.css?url";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { ToastContainer } from "react-toastify";
+import "react-international-phone/style.css";
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
