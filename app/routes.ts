@@ -10,4 +10,5 @@ export default [
   route("videographer", "routes/positions/videographer/page.tsx"),
   route("social-media-manager", "routes/positions/social-media-manager/page.tsx"),
   route("social-media-intern", "routes/positions/social-media-intern/page.tsx"),
+  route("production-assistant", "routes/positions/production-assistant/page.tsx"),
 ] satisfies RouteConfig;

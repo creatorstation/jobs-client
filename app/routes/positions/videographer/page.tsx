@@ -19,16 +19,18 @@ export function meta({}: Route.MetaArgs) {
   ];
 }
 
+type UserData = {
+  name: string;
+  email: string;
+  phone: string;
+  cv: FileList;
+  europeSide: string;
+  semt: string;
+  linkedin: string;
+};
+
 export default function Videographer() {
-  const [userData, setUserData] = useState<{
-    name: string;
-    email: string;
-    phone?: string;
-    cv?: FileList;
-    europeSide?: string;
-    semt?: string;
-    linkedin?: string;
-  } | null>(null);
+  const [userData, setUserData] = useState<Partial<UserData> | null>(null);
 
   const {
     register,
@@ -36,29 +38,13 @@ export default function Videographer() {
     setValue,
     trigger,
     formState: { errors, isValid },
-  } = useForm<{
-    name: string;
-    email: string;
-    phone: string;
-    cv: FileList;
-    europeSide: string;
-    semt: string;
-    linkedin: string;
-  }>({
+  } = useForm<UserData>({
     mode: "all",
   });
 
   const [uploadProgress, setUploadProgress] = useState<number>(0);
 
-  const onSubmit = (data: {
-    name: string;
-    email: string;
-    phone: string;
-    cv: FileList;
-    europeSide: string;
-    semt: string;
-    linkedin: string;
-  }) => {
+  const onSubmit = (data: UserData) => {
     setUserData(data);
 
     const formData = new FormData();
@@ -102,8 +88,8 @@ export default function Videographer() {
 
   useEffect(() => {
     if (userData) {
-      setValue("name", userData.name);
-      setValue("email", userData.email);
+      setValue("name", userData.name as string);
+      setValue("email", userData.email as string);
       if (userData.phone) setValue("phone", userData.phone);
       if (userData.europeSide) setValue("europeSide", userData.europeSide);
       if (userData.semt) setValue("semt", userData.semt);
@@ -214,7 +200,7 @@ export default function Videographer() {
             @creatorstation
           </a>{" "}
           and our YouTube channel:{" "}
-          <a className="text-blue-500" href="https://crst.io/ig">
+          <a className="text-blue-500" href="https://crst.io/yt">
             Youtuber Durağı
           </a>{" "}
           to see how we work.
