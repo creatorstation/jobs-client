@@ -184,94 +184,132 @@ export default function ProductionAssistant() {
       <h1 className="text-3xl font-bold mb-4 text-center">
         Production Assistant
       </h1>
+
       <section className="mb-6">
         <h2 className="text-2xl font-semibold mb-2">About Us</h2>
         <p className="text-gray-700">
-          CreatorStation is a leading company in influencer marketing and talent
-          management, specializing in managing top Turkish YouTube channels
-          across various categories such as entertainment, gaming, education,
-          style, beauty, and travel. We produce top-notch content for these
-          channels.
-        </p>
-        <p className="text-gray-700 mt-4">
-          We are looking for a talented , both skilled in shooting and editing
-          with particular expertise in 2D compositing and green screen
-          technology, to join our team in İstanbul. Check out our Instagram{" "}
+          At CreatorStation, we’re shaping the future of digital content! As a
+          trailblazer in influencer marketing and talent management, we partner
+          with Turkey’s top creators on YouTube, Instagram, and TikTok across
+          entertainment, gaming, education, style, beauty, and travel. With over
+          50 million subscribers and 40 million unique viewers monthly, we
+          produce dynamic, high-quality content that keeps audiences coming back
+          for more. If you’re passionate about YouTube, Instagram, and TikTok,
+          have an eye for beauty trends, and love bringing creative ideas to
+          life, we’d love to have you on board. Explore our work on Instagram{" "}
           <a className="text-blue-500" href="https://crst.io/ig">
             @creatorstation
           </a>{" "}
-          and our YouTube channel:{" "}
+          and YouTube{" "}
           <a className="text-blue-500" href="https://crst.io/yt">
             Youtuber Durağı
-          </a>{" "}
-          to see how we work.
+          </a>
         </p>
       </section>
 
       <section className="mb-6">
-        <h2 className="text-2xl font-semibold mb-2">Requirements</h2>
+        <h2 className="text-2xl font-semibold mb-2">Position</h2>
+        <p className="text-gray-700">Production Assistant</p>
+        <p className="text-gray-700">
+          Location: This is a full-time, onsite role based at our Vadistanbul
+          office on the European side of Istanbul. Candidates must reside on the
+          European side of Istanbul.
+        </p>
+      </section>
+
+      <section className="mb-6">
+        <h2 className="text-2xl font-semibold mb-2">Why Join Us?</h2>
         <ul className="list-disc list-inside space-y-1 text-gray-700">
-          <li>Bachelor’s or Master’s degree in related fields</li>
           <li>
-            At least 2 years of experience as a , video editor, or VFX Artist
+            Work with top creators and household brands to produce content that
+            makes an impact.
           </li>
           <li>
-            This is a full-time and on-site job. We are located in Vadistanbul.
+            Immerse yourself in a creative, fast-paced environment where no two
+            days are the same.
           </li>
           <li>
-            Apply 2D compositing and green screen techniques to create
-            compelling visual effects.
+            Contribute to projects that push the boundaries of digital
+            storytelling across YouTube, Instagram, and TikTok.
           </li>
-          <li>
-            Proficiency in TikTok/Reels vertical video grammar and trend
-            monitoring.
-          </li>
-          <li>Knowledge of AI trends and applications in video production.</li>
         </ul>
       </section>
 
       <section className="mb-6">
-        <h2 className="text-2xl font-semibold mb-2">Responsibilities</h2>
+        <h2 className="text-2xl font-semibold mb-2">What We’re Looking For</h2>
         <ul className="list-disc list-inside space-y-1 text-gray-700">
           <li>
-            Work with YouTubers and Brands to identify and pitch unique,
-            engaging video content.
+            Social Media Enthusiast: You actively follow creators and stay tuned
+            to the latest trends on YouTube, Instagram, and TikTok.
           </li>
           <li>
-            Shoot (With Canon R & Cinema Series), edit, and produce online video
-            content, ranging from big productions to quick turnarounds.
+            Beauty & Makeup Pro: You’re familiar with makeup, beauty products,
+            and the latest trends in the industry.
           </li>
           <li>
-            Work with creators to define and shape video programming strategy
-            and content for the related verticals.
+            Reliable & Flexible: Available to work on-site in Istanbul, five
+            days a week, with no domestic travel restrictions.
           </li>
-          <li>Manage multiple shoots and edits simultaneously.</li>
+          <li>
+            Trend Savvy: You keep up with the latest on YouTube, Instagram,
+            TikTok, and other social media platforms.
+          </li>
+          <li>Bilingual Advantage: Strong proficiency in English.</li>
+          <li>
+            Location-Specific Requirement: Residing on the European side of
+            Istanbul is required.
+          </li>
         </ul>
       </section>
 
       <section className="mb-6">
-        <h2 className="text-2xl font-semibold mb-2">Qualifications</h2>
+        <h2 className="text-2xl font-semibold mb-2">Your Role</h2>
         <ul className="list-disc list-inside space-y-1 text-gray-700">
           <li>
-            Minimum 2 years of DSLR video shooting experience (preferably with
-            Canon Cameras).
+            Plan & Organize: Manage video and social media content preparations,
+            track timelines, and ensure seamless execution.
           </li>
           <li>
-            Minimum 2 years of editing with Adobe Premiere experience is a must.
+            Source & Manage Supplies: Handle procurement, returns, and
+            organization of materials, including makeup and beauty products.
           </li>
           <li>
-            Minimum 1 year of 2D compositing and green screen techniques
-            experience is a must.
+            Be the Go-To Person: Support creators and filming crews with
+            everything they need to succeed.
           </li>
-          <li>Experience with gimbals is a plus.</li>
           <li>
-            Ability to thrive in a fast-paced, deadline-driven environment.
+            Ensure Flawless Content: Preview videos, test featured products
+            (especially in beauty), and provide actionable feedback.
           </li>
-          <li>Passion and knowledge of online video.</li>
-          <li>Creative, flexible thinker.</li>
-          <li>Native level of Turkish.</li>
-          <li>Medium level of English.</li>
+          <li>
+            Handle Logistics: Manage permits, expenses, and other organizational
+            tasks for shoots across YouTube, Instagram, and TikTok.
+          </li>
         </ul>
+      </section>
+
+      <section className="mb-6">
+        <h2 className="text-2xl font-semibold mb-2">What You Bring</h2>
+        <ul className="list-disc list-inside space-y-1 text-gray-700">
+          <li>A love for all things digital, creative, and beautiful.</li>
+          <li>
+            A proactive, problem-solving attitude and attention to detail.
+          </li>
+          <li>
+            The ability to thrive in a fast-paced, collaborative environment.
+          </li>
+        </ul>
+      </section>
+
+      <section className="mb-6">
+        <h2 className="text-2xl font-semibold mb-2">
+          Ready to Make Your Mark?
+        </h2>
+        <p className="text-gray-700">
+          Apply now to join CreatorStation’s Istanbul team and be part of
+          shaping the next big thing in digital content creation. Let’s create
+          something extraordinary together!
+        </p>
       </section>
 
       <div className="text-center">
@@ -467,7 +505,7 @@ export default function ProductionAssistant() {
                 }`}
                 disabled={!isValid || uploadProgress > 0}
               >
-                Apply for Videographer
+                Apply for Production Assistant
               </button>
             </form>
           </>
