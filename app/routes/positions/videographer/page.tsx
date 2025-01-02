@@ -159,7 +159,7 @@ export default function Videographer() {
     const code = urlParams.get("code");
     if (code) {
       axios
-        .get("http://localhost:3000/api/auth/linkedin", {
+        .get("https://i4qbeevmo5.execute-api.us-east-1.amazonaws.com/v1/api/auth/linkedin", {
           params: {
             code,
             redirect_uri: redirectUri,
@@ -464,10 +464,6 @@ export default function Videographer() {
             {errors.linkedin && (
               <p className="text-red-500">{errors.linkedin.message}</p>
             )}
-            {errors.linkedin && (
-              <p className="text-red-500">{errors.linkedin.message}</p>
-            )}
-
             <button
               type="submit"
               className={`p-2 rounded ${
