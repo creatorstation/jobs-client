@@ -1,16 +1,11 @@
-import { GoogleLogin } from "@react-oauth/google";
 import type { Route } from "./+types/page";
 import { toast } from "react-toastify";
-import { jwtDecode } from "jwt-decode";
 
-import { useState, useEffect, useCallback, useRef } from "react";
-import { useForm } from "react-hook-form";
+import { useEffect } from "react";
 import axios from "axios";
-import LinkedInLogin from "~/components/LinkedinButton";
-import { PhoneInput } from "react-international-phone";
-import { isPhoneValid } from "~/helpers/isPhoneValid";
 import { SubmitForm } from "~/components/SubmitForm";
 import { userStore } from "~/store/user-store";
+import { AuthButtons } from "~/components/AuthButtons";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -165,26 +160,7 @@ export default function Videographer() {
             <div className="mb-4">
               <strong>To apply, please sign in below:</strong>
             </div>
-            <GoogleLogin
-              size="large"
-              onSuccess={(credentialResponse) => {
-                console.log(credentialResponse);
-                const decoded = jwtDecode<any>(
-                  credentialResponse.credential as string
-                );
-                updateUserData(decoded);
-                toast("Signed in successfully!", { type: "success" });
-              }}
-              onError={() => {
-                toast("An error occurred while signing in.", { type: "error" });
-              }}
-              useOneTap={true}
-              text="continue_with"
-            />
-
-            <div className="mt-4">
-              <LinkedInLogin redirPath="videographer" />
-            </div>
+            <AuthButtons redirPath="videographer" />
           </>
         ) : (
           <>
