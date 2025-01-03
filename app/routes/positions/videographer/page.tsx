@@ -6,6 +6,7 @@ import axios from 'axios';
 import { SubmitForm } from '~/components/SubmitForm';
 import { userStore } from '~/store/user-store';
 import { AuthButtons } from '~/components/AuthButtons';
+import { appStore } from '~/store/app-store';
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -18,7 +19,8 @@ export function meta({}: Route.MetaArgs) {
 }
 
 export default function Videographer() {
-  const { userData, updateUserData } = userStore();
+  const { updateUserData } = userStore();
+  const { appData } = appStore();
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -114,12 +116,14 @@ export default function Videographer() {
         </ul>
       </section>
 
-      <div  className='max-w-md mx-auto p-6 bg-white rounded-lg border text-center'>
+      <div className="max-w-md mx-auto p-6 bg-white rounded-lg border text-center">
         <SubmitForm positionName="Videographer" submitBtnText="Apply for Videographer" />
-        <div className="relative mb-4 mt-12">
-          <span className="relative bottom-3 bg-white px-2 text-gray-500">Or</span>
-          <AuthButtons redirPath="videographer" />
-        </div>
+        {appData.step === 0 && (
+          <div className="relative mb-4 mt-12">
+            <span className="relative bottom-3 bg-white px-2 text-gray-500">Or</span>
+            <AuthButtons redirPath="videographer" />
+          </div>
+        )}
       </div>
     </main>
   );

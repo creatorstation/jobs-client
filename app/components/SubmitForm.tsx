@@ -7,6 +7,7 @@ import { isPhoneValid } from '~/helpers/isPhoneValid';
 import { userStore } from '~/store/user-store';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FaCheckCircle } from 'react-icons/fa';
+import { appStore } from '~/store/app-store';
 
 type UserData = {
   name: string;
@@ -28,8 +29,15 @@ export interface SubmitFormProps {
 }
 
 export function SubmitForm({ submitBtnText, positionName, nonFullTime = false }: SubmitFormProps) {
+  const { appData, updateAppData } = appStore();
+
   const { userData, updateUserData } = userStore();
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const handleNext = () => {
+    if (isValid) {
+      updateAppData({ step: 1 });
+    }
+  };
 
   const [verification, setVerification] = useState<{
     isVerifying: boolean;
@@ -300,8 +308,8 @@ export function SubmitForm({ submitBtnText, positionName, nonFullTime = false }:
 
   const buttonVariants = {
     hover: {
-      scale: 1.05,
-      boxShadow: '0px 0px 8px rgb(0, 0, 0)',
+      scale: 1.04,
+      boxShadow: '0px 0px 3px rgb(0, 0, 0)',
       transition: {
         yoyo: Infinity,
       },
@@ -325,6 +333,16 @@ export function SubmitForm({ submitBtnText, positionName, nonFullTime = false }:
     return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
   };
 
+  useEffect(() => {
+    if (userData) {
+      const timer = setTimeout(() => {
+        trigger(['name', 'email']);
+      }, 500);
+
+      return () => clearTimeout(timer);
+    }
+  }, [userData, trigger]);
+
   return (
     <motion.form
       onSubmit={handleSubmit(onSubmit)}
@@ -333,462 +351,327 @@ export function SubmitForm({ submitBtnText, positionName, nonFullTime = false }:
       animate="visible"
       className="space-y-6"
     >
-      <motion.div variants={fieldVariants} className="mb-4">
-        <motion.input
-          type="text"
-          {...register('name', { required: 'Name is required.' })}
-          className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
-          placeholder="Your Name"
-          whileFocus={{ scale: 1.02 }}
-          transition={{ type: 'spring', stiffness: 100 }}
-        />
-        <AnimatePresence>
-          {errors.name && (
-            <motion.p
-              className="text-red-500 text-sm mt-1"
-              variants={errorVariants}
-              initial="hidden"
-              animate="visible"
-              exit="hidden"
-            >
-              {errors.name.message}
-            </motion.p>
-          )}
-        </AnimatePresence>
-      </motion.div>
+      {appData.step === 0 && (
+        <>
+          <motion.div variants={fieldVariants} className="mb-4">
+            <motion.input
+              type="text"
+              {...register('name', { required: 'Name is required.' })}
+              className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+              placeholder="Your Name"
+              whileFocus={{ scale: 1.02 }}
+              transition={{ type: 'spring', stiffness: 100 }}
+            />
+            <AnimatePresence>
+              {errors.name && (
+                <motion.p
+                  className="text-red-500 text-sm mt-1"
+                  variants={errorVariants}
+                  initial="hidden"
+                  animate="visible"
+                  exit="hidden"
+                >
+                  {errors.name.message}
+                </motion.p>
+              )}
+            </AnimatePresence>
+          </motion.div>
 
-      <motion.div variants={fieldVariants} className="mb-4">
-        <motion.input
-          type="email"
-          {...register('email', {
-            required: 'Email is required.',
-            pattern: {
-              value: /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/,
-              message: 'Invalid email address.',
-            },
-          })}
-          className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
-          placeholder="your.email@example.com"
-          whileFocus={{ scale: 1.02 }}
-          transition={{ type: 'spring', stiffness: 100 }}
-        />
-        <AnimatePresence>
-          {errors.email && (
-            <motion.p
-              className="text-red-500 text-sm mt-1"
-              variants={errorVariants}
-              initial="hidden"
-              animate="visible"
-              exit="hidden"
-            >
-              {errors.email.message}
-            </motion.p>
-          )}
-        </AnimatePresence>
-      </motion.div>
+          <motion.div variants={fieldVariants} className="mb-4">
+            <motion.input
+              type="email"
+              {...register('email', {
+                required: 'Email is required.',
+                pattern: {
+                  value: /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/,
+                  message: 'Invalid email address.',
+                },
+              })}
+              className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+              placeholder="your.email@example.com"
+              whileFocus={{ scale: 1.02 }}
+              transition={{ type: 'spring', stiffness: 100 }}
+            />
+            <AnimatePresence>
+              {errors.email && (
+                <motion.p
+                  className="text-red-500 text-sm mt-1"
+                  variants={errorVariants}
+                  initial="hidden"
+                  animate="visible"
+                  exit="hidden"
+                >
+                  {errors.email.message}
+                </motion.p>
+              )}
+            </AnimatePresence>
+          </motion.div>
+          <motion.button
+            type="button"
+            onClick={handleNext}
+            className={`w-full p-2 rounded ${
+              isValid ? 'bg-blue-500 text-white' : 'bg-[#e9e9ed] text-black cursor-not-allowed'
+            }`}
+            disabled={!isValid}
+            variants={buttonVariants}
+            whileHover={isValid ? 'hover' : {}}
+            whileTap="tap"
+            transition={{ type: 'spring', stiffness: 100 }}
+          >
+            Next
+          </motion.button>
+        </>
+      )}
 
-      <motion.div variants={fieldVariants} className="mb-4 relative">
-        <PhoneInput
-          className={`w-full p-2 mb-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400 ${
-            verification.isValid ? 'bg-gray-100 cursor-not-allowed' : ''
-          }`}
-          inputStyle={{ border: 'none', width: '100%', fontSize: '1rem' }}
-          countrySelectorStyleProps={{
-            buttonStyle: {
-              border: 'none',
-            },
-          }}
-          defaultCountry="tr"
-          value={userData?.phone || ''}
-          onChange={(phone) => {
-            updateUserData({ ...userData, phone } as UserData);
-            setValue('phone', phone);
-            trigger('phone');
-            setVerification((prev) => ({
-              ...prev,
-              isValid: false,
-              codeSent: false,
-              isVerifying: false,
-              code: '',
-              error: '',
-            }));
-            setVerificationTimer(0);
-            if (timerRef.current) {
-              clearInterval(timerRef.current);
-            }
-          }}
-          disabled={verification.isValid}
-        />
-        {verification.isValid && <FaCheckCircle className="absolute top-[18px] right-5 text-green-500 text-xl" />}
-        {!isValidPh && (
-          <AnimatePresence>
-            <motion.p
-              className="text-red-500 text-sm mb-2"
-              variants={errorVariants}
-              initial="hidden"
-              animate="visible"
-              exit="hidden"
-            >
-              Please enter a valid phone number.
-            </motion.p>
-          </AnimatePresence>
-        )}
+      {appData.step === 1 && (
+        <>
+          <motion.div variants={fieldVariants} className="mb-4 relative">
+            <PhoneInput
+              className={`w-full p-2 mb-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400 ${
+                verification.isValid ? 'bg-gray-100 cursor-not-allowed' : ''
+              }`}
+              inputStyle={{ border: 'none', width: '100%', fontSize: '1rem' }}
+              countrySelectorStyleProps={{
+                buttonStyle: {
+                  border: 'none',
+                },
+              }}
+              defaultCountry="tr"
+              value={userData?.phone || ''}
+              onChange={(phone) => {
+                updateUserData({ ...userData, phone } as UserData);
+                setValue('phone', phone);
+                trigger('phone');
+                setVerification((prev) => ({
+                  ...prev,
+                  isValid: false,
+                  codeSent: false,
+                  isVerifying: false,
+                  code: '',
+                  error: '',
+                }));
+                setVerificationTimer(0);
+                if (timerRef.current) {
+                  clearInterval(timerRef.current);
+                }
+              }}
+              disabled={verification.isValid}
+            />
+            {verification.isValid && <FaCheckCircle className="absolute top-[18px] right-5 text-green-500 text-xl" />}
+            {!isValidPh && (
+              <AnimatePresence>
+                <motion.p
+                  className="text-red-500 text-sm mb-2"
+                  variants={errorVariants}
+                  initial="hidden"
+                  animate="visible"
+                  exit="hidden"
+                >
+                  Please enter a valid phone number.
+                </motion.p>
+              </AnimatePresence>
+            )}
 
-        {isValidPh && (
-          <AnimatePresence>
-            {!verification.isValid && (
-              <motion.div
-                className="mb-4 p-4 border rounded bg-yellow-100"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0, height: 0 }}
-                transition={{ duration: 0.3 }}
-              >
-                {!verification.codeSent ? (
-                  <motion.button
+            {isValidPh && (
+              <AnimatePresence>
+                {!verification.isValid && (
+                  <motion.div
+                    className="mb-4 p-4 border rounded bg-yellow-100"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
-                    type="button"
-                    onClick={sendVerificationCode}
-                    className="px-4 py-2 bg-blue-500 text-white rounded"
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
+                    exit={{ opacity: 0, height: 0 }}
+                    transition={{ duration: 0.3 }}
                   >
-                    Send Verification Code
-                  </motion.button>
-                ) : (
-                  <motion.div className="mt-4" initial="hidden" animate="visible" variants={formVariants}>
-                    <motion.p
-                      className="text-gray-700 text-sm mb-2"
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0 }}
-                      transition={{ duration: 0.5 }}
-                    >
-                      We’ve sent a verification code via WhatsApp to {userData?.phone}. Please enter the code below to
-                      confirm it’s really you.
-                    </motion.p>
-                    <motion.input
-                      type="text"
-                      value={verification.code}
-                      onChange={(e) =>
-                        setVerification((prev) => ({
-                          ...prev,
-                          code: e.target.value,
-                        }))
-                      }
-                      className="w-full p-2 mb-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
-                      placeholder="Enter 6-digit code"
-                      maxLength={6}
-                      whileFocus={{ scale: 1.02 }}
-                      transition={{ type: 'spring', stiffness: 100 }}
-                    />
-                    {verification.error && (
-                      <motion.p
-                        className="text-red-500 text-sm mb-2"
-                        variants={errorVariants}
-                        initial="hidden"
-                        animate="visible"
-                        exit="hidden"
-                      >
-                        {verification.error}
-                      </motion.p>
-                    )}
-                    {verificationTimer > 0 && (
-                      <motion.p
-                        className="text-gray-700 text-sm mb-2"
+                    {!verification.codeSent ? (
+                      <motion.button
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        transition={{ duration: 0.5 }}
-                      >
-                        You have {formatTime(verificationTimer)} to enter the verification code.
-                      </motion.p>
-                    )}
-                    <div className="flex space-x-4">
-                      <motion.button
                         type="button"
-                        onClick={verifyCode}
-                        className="px-4 py-2 bg-green-500 text-white rounded"
+                        onClick={sendVerificationCode}
+                        className="px-4 py-2 bg-blue-500 text-white rounded"
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
                       >
-                        Verify
+                        Send Verification Code
                       </motion.button>
-                      <motion.button
-                        type="button"
-                        onClick={handleResendCode}
-                        className={`px-4 py-2 bg-gray-500 text-white rounded ${
-                          verification.resendCooldown > 0 ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'
-                        }`}
-                        disabled={verification.resendCooldown > 0}
-                        whileHover={verification.resendCooldown === 0 ? { scale: 1.05 } : {}}
-                        whileTap={verification.resendCooldown === 0 ? { scale: 0.95 } : {}}
-                      >
-                        {verification.resendCooldown > 0 ? `Resend (${verification.resendCooldown}s)` : 'Resend Code'}
-                      </motion.button>
-                    </div>
+                    ) : (
+                      <motion.div className="mt-4" initial="hidden" animate="visible" variants={formVariants}>
+                        <motion.p
+                          className="text-gray-700 text-sm mb-2"
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          exit={{ opacity: 0 }}
+                          transition={{ duration: 0.5 }}
+                        >
+                          We’ve sent a verification code via WhatsApp to {userData?.phone}. Please enter the code below
+                          to confirm it’s really you.
+                        </motion.p>
+                        <motion.input
+                          type="text"
+                          value={verification.code}
+                          onChange={(e) =>
+                            setVerification((prev) => ({
+                              ...prev,
+                              code: e.target.value,
+                            }))
+                          }
+                          className="w-full p-2 mb-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+                          placeholder="Enter 6-digit code"
+                          maxLength={6}
+                          whileFocus={{ scale: 1.02 }}
+                          transition={{ type: 'spring', stiffness: 100 }}
+                        />
+                        {verification.error && (
+                          <motion.p
+                            className="text-red-500 text-sm mb-2"
+                            variants={errorVariants}
+                            initial="hidden"
+                            animate="visible"
+                            exit="hidden"
+                          >
+                            {verification.error}
+                          </motion.p>
+                        )}
+                        {verificationTimer > 0 && (
+                          <motion.p
+                            className="text-gray-700 text-sm mb-2"
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            transition={{ duration: 0.5 }}
+                          >
+                            You have {formatTime(verificationTimer)} to enter the verification code.
+                          </motion.p>
+                        )}
+                        <div className="flex space-x-4">
+                          <motion.button
+                            type="button"
+                            onClick={verifyCode}
+                            className="px-4 py-2 bg-green-500 text-white rounded"
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                          >
+                            Verify
+                          </motion.button>
+                          <motion.button
+                            type="button"
+                            onClick={handleResendCode}
+                            className={`px-4 py-2 bg-gray-500 text-white rounded ${
+                              verification.resendCooldown > 0 ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'
+                            }`}
+                            disabled={verification.resendCooldown > 0}
+                            whileHover={verification.resendCooldown === 0 ? { scale: 1.05 } : {}}
+                            whileTap={verification.resendCooldown === 0 ? { scale: 0.95 } : {}}
+                          >
+                            {verification.resendCooldown > 0
+                              ? `Resend (${verification.resendCooldown}s)`
+                              : 'Resend Code'}
+                          </motion.button>
+                        </div>
+                      </motion.div>
+                    )}
                   </motion.div>
                 )}
-              </motion.div>
+              </AnimatePresence>
             )}
-          </AnimatePresence>
-        )}
-      </motion.div>
+          </motion.div>
 
-      <motion.div variants={fieldVariants} className="mb-4" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-        <motion.div
-          className="p-4 border-dashed border-2 rounded cursor-pointer"
-          onDrop={handleDrop}
-          onDragOver={handleDragOver}
-          onClick={handleClick}
-          whileHover={{ backgroundColor: '#f0f4f8' }}
-          transition={{ duration: 0.3 }}
-        >
-          <input
-            type="file"
-            {...register('cv', { required: 'CV is required' })}
-            ref={fileInputRef}
-            className="hidden"
-            accept=".pdf, .docx"
-            onChange={(e) => {
-              const files = e.target.files;
-              if (files && files.length > 0) {
-                const file = files[0];
-                if (
-                  file.type === 'application/pdf' ||
-                  file.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
-                ) {
-                  setValue('cv', files as unknown as FileList);
-                  trigger('cv');
-
-                  const reader = new FileReader();
-                  reader.onload = (e) => {
-                    setFilePreview(e.target?.result as string);
-                  };
-                  reader.readAsDataURL(file);
-                } else {
-                  toast('Only PDF and DOCX files are supported.', {
-                    type: 'error',
-                  });
-                  e.target.value = '';
-                }
-              }
-            }}
-          />
-
-          <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }}>
-            Drag and drop your CV here or click to upload. (PDF,or Doc)
-          </motion.p>
-
-          <AnimatePresence>
-            {errors.cv && (
-              <motion.p
-                className="text-red-500 text-sm mt-1"
-                variants={errorVariants}
-                initial="hidden"
-                animate="visible"
-                exit="hidden"
-              >
-                {errors.cv.message}
-              </motion.p>
-            )}
-          </AnimatePresence>
-        </motion.div>
-
-        {filePreview && (
-          <div className="mt-2 mb-8">
-            <p>Preview:</p>
-            {filePreview.startsWith('data:application/pdf') ? (
-              <iframe src={filePreview} className="w-full h-64 border rounded" />
-            ) : (
-              <p>File type not supported for preview.</p>
-            )}
-          </div>
-        )}
-      </motion.div>
-
-      <motion.div variants={fieldVariants} className="mb-4">
-        <label className="block mb-2">Are you currently living on the European side of Istanbul?</label>
-        <motion.select
-          {...register('europeSide', { required: 'This field is required.' })}
-          className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
-          defaultValue=""
-          whileFocus={{ scale: 1.02 }}
-          transition={{ type: 'spring', stiffness: 100 }}
-        >
-          <option value="" disabled>
-            Select an option
-          </option>
-          <option value="Yes">Yes</option>
-          <option value="No">No</option>
-        </motion.select>
-        <AnimatePresence>
-          {errors.europeSide && (
-            <motion.p
-              className="text-red-500 text-sm mt-1"
-              variants={errorVariants}
-              initial="hidden"
-              animate="visible"
-              exit="hidden"
-            >
-              {errors.europeSide.message}
-            </motion.p>
-          )}
-        </AnimatePresence>
-      </motion.div>
-
-      <motion.div variants={fieldVariants} className="mb-4">
-        <motion.input
-          type="text"
-          {...register('semt', { required: 'This field is required.' })}
-          className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
-          placeholder="Disctrict (e.g. Beşiktaş)"
-          whileFocus={{ scale: 1.02 }}
-          transition={{ type: 'spring', stiffness: 100 }}
-        />
-        <AnimatePresence>
-          {errors.semt && (
-            <motion.p
-              className="text-red-500 text-sm mt-1"
-              variants={errorVariants}
-              initial="hidden"
-              animate="visible"
-              exit="hidden"
-            >
-              {errors.semt.message}
-            </motion.p>
-          )}
-        </AnimatePresence>
-      </motion.div>
-
-      <motion.div variants={fieldVariants} className="mb-4">
-        <motion.input
-          type="url"
-          {...register('linkedin', {
-            pattern: {
-              value: /^(https?:\/\/)?([\w]+\.)?linkedin\.com\/.*$/,
-              message: 'Enter a valid LinkedIn URL.',
-            },
-          })}
-          className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
-          placeholder="https://www.linkedin.com/in/yourprofile"
-          whileFocus={{ scale: 1.02 }}
-          transition={{ type: 'spring', stiffness: 100 }}
-        />
-        <AnimatePresence>
-          {errors.linkedin && (
-            <motion.p
-              className="text-red-500 text-sm mt-1"
-              variants={errorVariants}
-              initial="hidden"
-              animate="visible"
-              exit="hidden"
-            >
-              {errors.linkedin.message}
-            </motion.p>
-          )}
-        </AnimatePresence>
-      </motion.div>
-
-      {nonFullTime && (
-        <motion.div variants={fieldVariants} className="mb-4" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-          <div className="mb-4">
-            <label className="block mb-2">Do you have a mandatory internship?</label>
-            <motion.select
-              {...register('mandatoryInternship', {
-                required: 'This field is required.',
-              })}
-              className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
-              defaultValue=""
-              whileFocus={{ scale: 1.02 }}
-              transition={{ type: 'spring', stiffness: 100 }}
-            >
-              <option value="" disabled>
-                Select an option
-              </option>
-              <option value="true">Yes</option>
-              <option value="false">No</option>
-            </motion.select>
-            <AnimatePresence>
-              {errors.mandatoryInternship && (
-                <motion.p
-                  className="text-red-500 text-sm mt-1"
-                  variants={errorVariants}
-                  initial="hidden"
-                  animate="visible"
-                  exit="hidden"
-                >
-                  {errors.mandatoryInternship.message}
-                </motion.p>
-              )}
-            </AnimatePresence>
-          </div>
-
-          <div className="mb-4">
-            <label className="block mb-2">Does your school provide your insurance?</label>
-            <motion.select
-              {...register('hasInsurance', {
-                required: 'This field is required.',
-              })}
-              className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
-              defaultValue=""
-              whileFocus={{ scale: 1.02 }}
-              transition={{ type: 'spring', stiffness: 100 }}
-            >
-              <option value="" disabled>
-                Select an option
-              </option>
-              <option value="true">Yes</option>
-              <option value="false">No</option>
-            </motion.select>
-            <AnimatePresence>
-              {errors.hasInsurance && (
-                <motion.p
-                  className="text-red-500 text-sm mt-1"
-                  variants={errorVariants}
-                  initial="hidden"
-                  animate="visible"
-                  exit="hidden"
-                >
-                  {errors.hasInsurance.message}
-                </motion.p>
-              )}
-            </AnimatePresence>
-          </div>
-
-          <div className="mb-4">
-            <label className="block mb-2">Which days are you available to work?</label>
+          <motion.div variants={fieldVariants} className="mb-4" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
             <motion.div
-              className="flex flex-col md:flex-row flex-wrap justify-center"
-              initial="hidden"
-              animate="visible"
-              variants={formVariants}
+              className="p-4 border-dashed border-2 rounded cursor-pointer"
+              onDrop={handleDrop}
+              onDragOver={handleDragOver}
+              onClick={handleClick}
+              whileHover={{ backgroundColor: '#f0f4f8' }}
+              transition={{ duration: 0.3 }}
             >
-              {['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'].map((day) => (
-                <motion.label key={day} className="mb-4 md:mb-0 md:mr-4 flex items-center" variants={fieldVariants}>
-                  <motion.input
-                    type="checkbox"
-                    value={day}
-                    {...register('workDays', {
-                      validate: (value) => value.length > 0 || 'At least one workday must be selected.',
-                    })}
-                    className="form-checkbox w-8 h-8 md:w-6 md:h-6"
-                    whileTap={{ scale: 0.95 }}
-                  />
-                  <motion.span
-                    className="ml-2 text-lg"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 0.1 }}
+              <input
+                type="file"
+                {...register('cv', { required: 'CV is required' })}
+                ref={fileInputRef}
+                className="hidden"
+                accept=".pdf, .docx"
+                onChange={(e) => {
+                  const files = e.target.files;
+                  if (files && files.length > 0) {
+                    const file = files[0];
+                    if (
+                      file.type === 'application/pdf' ||
+                      file.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+                    ) {
+                      setValue('cv', files as unknown as FileList);
+                      trigger('cv');
+
+                      const reader = new FileReader();
+                      reader.onload = (e) => {
+                        setFilePreview(e.target?.result as string);
+                      };
+                      reader.readAsDataURL(file);
+                    } else {
+                      toast('Only PDF and DOCX files are supported.', {
+                        type: 'error',
+                      });
+                      e.target.value = '';
+                    }
+                  }
+                }}
+              />
+
+              <motion.p
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.2 }}
+                className="text-sm"
+              >
+                Upload your CV (PDF or DOC)
+                <br />
+                or drag and drop it here.
+              </motion.p>
+
+              <AnimatePresence>
+                {errors.cv && (
+                  <motion.p
+                    className="text-red-500 text-sm mt-1"
+                    variants={errorVariants}
+                    initial="hidden"
+                    animate="visible"
+                    exit="hidden"
                   >
-                    {day}
-                  </motion.span>
-                </motion.label>
-              ))}
+                    {errors.cv!.message}
+                  </motion.p>
+                )}
+              </AnimatePresence>
             </motion.div>
+
+            {filePreview && (
+              <div className="mt-2 mb-8">
+                <p>Preview:</p>
+                {filePreview?.startsWith('data:application/pdf') ? (
+                  <iframe src={filePreview as string} className="w-full h-64 border rounded" />
+                ) : (
+                  <p>File type not supported for preview.</p>
+                )}
+              </div>
+            )}
+          </motion.div>
+
+          <motion.div variants={fieldVariants} className="mb-4">
+            <label className="block mb-2">Do you live on Istanbul’s European side?</label>
+            <motion.select
+              {...register('europeSide', { required: 'This field is required.' })}
+              className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+              defaultValue=""
+              whileFocus={{ scale: 1.02 }}
+              transition={{ type: 'spring', stiffness: 100 }}
+            >
+              <option value="" disabled>
+                Select an option
+              </option>
+              <option value="Yes">Yes</option>
+              <option value="No">No</option>
+            </motion.select>
             <AnimatePresence>
-              {errors.workDays && (
+              {errors.europeSide && (
                 <motion.p
                   className="text-red-500 text-sm mt-1"
                   variants={errorVariants}
@@ -796,12 +679,197 @@ export function SubmitForm({ submitBtnText, positionName, nonFullTime = false }:
                   animate="visible"
                   exit="hidden"
                 >
-                  {errors.workDays.message}
+                  {errors.europeSide!.message}
                 </motion.p>
               )}
             </AnimatePresence>
-          </div>
-        </motion.div>
+          </motion.div>
+
+          <motion.div variants={fieldVariants} className="mb-4">
+            <motion.input
+              type="text"
+              {...register('semt', { required: 'This field is required.' })}
+              className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+              placeholder="Disctrict (e.g. Beşiktaş)"
+              whileFocus={{ scale: 1.02 }}
+              transition={{ type: 'spring', stiffness: 100 }}
+            />
+            <AnimatePresence>
+              {errors.semt && (
+                <motion.p
+                  className="text-red-500 text-sm mt-1"
+                  variants={errorVariants}
+                  initial="hidden"
+                  animate="visible"
+                  exit="hidden"
+                >
+                  {errors.semt!.message}
+                </motion.p>
+              )}
+            </AnimatePresence>
+          </motion.div>
+
+          <motion.div variants={fieldVariants} className="mb-4">
+            <motion.input
+              type="url"
+              {...register('linkedin', {
+                pattern: {
+                  value: /^(https?:\/\/)?([\w]+\.)?linkedin\.com\/.*$/,
+                  message: 'Enter a valid LinkedIn URL.',
+                },
+              })}
+              className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+              placeholder="https://www.linkedin.com/in/yourprofile"
+              whileFocus={{ scale: 1.02 }}
+              transition={{ type: 'spring', stiffness: 100 }}
+            />
+            <AnimatePresence>
+              {errors.linkedin && (
+                <motion.p
+                  className="text-red-500 text-sm mt-1"
+                  variants={errorVariants}
+                  initial="hidden"
+                  animate="visible"
+                  exit="hidden"
+                >
+                  {errors.linkedin!.message}
+                </motion.p>
+              )}
+            </AnimatePresence>
+          </motion.div>
+
+          {nonFullTime && (
+            <motion.div variants={fieldVariants} className="mb-4" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+              <div className="mb-4">
+                <label className="block mb-2">Do you have a mandatory internship?</label>
+                <motion.select
+                  {...register('mandatoryInternship', {
+                    required: 'This field is required.',
+                  })}
+                  className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+                  defaultValue=""
+                  whileFocus={{ scale: 1.02 }}
+                  transition={{ type: 'spring', stiffness: 100 }}
+                >
+                  <option value="" disabled>
+                    Select an option
+                  </option>
+                  <option value="true">Yes</option>
+                  <option value="false">No</option>
+                </motion.select>
+                <AnimatePresence>
+                  {errors.mandatoryInternship && (
+                    <motion.p
+                      className="text-red-500 text-sm mt-1"
+                      variants={errorVariants}
+                      initial="hidden"
+                      animate="visible"
+                      exit="hidden"
+                    >
+                      {errors.mandatoryInternship!.message}
+                    </motion.p>
+                  )}
+                </AnimatePresence>
+              </div>
+
+              <div className="mb-4">
+                <label className="block mb-2">Does your school provide your insurance?</label>
+                <motion.select
+                  {...register('hasInsurance', {
+                    required: 'This field is required.',
+                  })}
+                  className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+                  defaultValue=""
+                  whileFocus={{ scale: 1.02 }}
+                  transition={{ type: 'spring', stiffness: 100 }}
+                >
+                  <option value="" disabled>
+                    Select an option
+                  </option>
+                  <option value="true">Yes</option>
+                  <option value="false">No</option>
+                </motion.select>
+                <AnimatePresence>
+                  {errors.hasInsurance && (
+                    <motion.p
+                      className="text-red-500 text-sm mt-1"
+                      variants={errorVariants}
+                      initial="hidden"
+                      animate="visible"
+                      exit="hidden"
+                    >
+                      {errors.hasInsurance!.message}
+                    </motion.p>
+                  )}
+                </AnimatePresence>
+              </div>
+
+              <div className="mb-4">
+                <label className="block mb-2">Which days are you available to work?</label>
+                <motion.div
+                  className="flex flex-col md:flex-row flex-wrap justify-center"
+                  initial="hidden"
+                  animate="visible"
+                  variants={formVariants}
+                >
+                  {['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'].map((day) => (
+                    <motion.label key={day} className="mb-4 md:mb-0 md:mr-4 flex items-center" variants={fieldVariants}>
+                      <motion.input
+                        type="checkbox"
+                        value={day}
+                        {...register('workDays', {
+                          validate: (value) => value.length > 0 || 'At least one workday must be selected.',
+                        })}
+                        className="form-checkbox w-8 h-8 md:w-6 md:h-6"
+                        whileTap={{ scale: 0.95 }}
+                      />
+                      <motion.span
+                        className="ml-2 text-lg"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ delay: 0.1 }}
+                      >
+                        {day}
+                      </motion.span>
+                    </motion.label>
+                  ))}
+                </motion.div>
+                <AnimatePresence>
+                  {errors.workDays && (
+                    <motion.p
+                      className="text-red-500 text-sm mt-1"
+                      variants={errorVariants}
+                      initial="hidden"
+                      animate="visible"
+                      exit="hidden"
+                    >
+                      {errors.workDays!.message}
+                    </motion.p>
+                  )}
+                </AnimatePresence>
+              </div>
+            </motion.div>
+          )}
+          <motion.button
+            type="submit"
+            className={`w-full p-2 rounded ${
+              isValid && !isSubmitting && isValidPh && (verification.isValid || !verification.isVerifying)
+                ? 'bg-blue-500 text-white'
+                : 'bg-[#e9e9ed] text-black cursor-not-allowed'
+            }`}
+            disabled={isSubmitting || !isValid || !isValidPh || (verification.isVerifying && !verification.isValid)}
+            variants={buttonVariants}
+            whileHover={
+              isValid && !isSubmitting && isValidPh && (verification.isValid || !verification.isVerifying)
+                ? 'hover'
+                : {}
+            }
+            whileTap="tap"
+            transition={{ type: 'spring', stiffness: 100 }}
+          >
+            {submitBtnText}
+          </motion.button>
+        </>
       )}
 
       {isSubmitting && (
@@ -821,24 +889,6 @@ export function SubmitForm({ submitBtnText, positionName, nonFullTime = false }:
           </div>
         </motion.div>
       )}
-
-      <motion.button
-        type="submit"
-        className={`w-full p-2 rounded ${
-          isValid && !isSubmitting && isValidPh && (verification.isValid || !verification.isVerifying)
-            ? 'bg-blue-500 text-white'
-            : 'bg-[#e9e9ed] text-black cursor-not-allowed'
-        }`}
-        disabled={isSubmitting || !isValid || !isValidPh || (verification.isVerifying && !verification.isValid)}
-        variants={buttonVariants}
-        whileHover={
-          isValid && !isSubmitting && isValidPh && (verification.isValid || !verification.isVerifying) ? 'hover' : {}
-        }
-        whileTap="tap"
-        transition={{ type: 'spring', stiffness: 100 }}
-      >
-        {submitBtnText}
-      </motion.button>
     </motion.form>
   );
 }
