@@ -437,7 +437,7 @@ export function SubmitForm({
           disabled={verification.isValid}
         />
         {verification.isValid && (
-          <FaCheckCircle className="absolute top-5 right-3 text-green-500 text-xl" />
+          <FaCheckCircle className="absolute top-[18px] right-5 text-green-500 text-xl" />
         )}
         {!isValidPh && (
           <AnimatePresence>
