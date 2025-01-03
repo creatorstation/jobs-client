@@ -193,7 +193,7 @@ export function SubmitForm({
   const sendVerificationCode = async () => {
     try {
       await axios.post(
-        "https://suzettegiven.app.n8n.cloud/webhook/3ae84523-7d5f-40e4-b03b-84311b859ed7",
+        "https://auto.creatorstation.com/webhook/3ae84523-7d5f-40e4-b03b-84311b859ed7",
         {
           phone: (userData as UserData).phone.replace(/\s/g, ""),
         }
@@ -219,7 +219,7 @@ export function SubmitForm({
     }
     try {
       const response = await axios.post(
-        "https://suzettegiven.app.n8n.cloud/webhook/0723c1ca-b5a6-41a7-bd57-e35d79c4a2ff",
+        "https://auto.creatorstation.com/webhook/0723c1ca-b5a6-41a7-bd57-e35d79c4a2ff",
         {
           phone: (userData as UserData).phone.replace(/\s/g, ""),
           code: verification.code,
@@ -482,6 +482,17 @@ export function SubmitForm({
                     animate="visible"
                     variants={formVariants}
                   >
+                    <motion.p
+                      className="text-gray-700 text-sm mb-2"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      transition={{ duration: 0.5 }}
+                    >
+                      We’ve sent a verification code via WhatsApp to{" "}
+                      {userData?.phone}. Please enter the code below to confirm
+                      it’s really you.
+                    </motion.p>
                     <motion.input
                       type="text"
                       value={verification.code}
