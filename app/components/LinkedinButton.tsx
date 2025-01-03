@@ -27,7 +27,7 @@ export default function LinkedInLogin({ redirPath }: LinkedInLoginProps) {
         loading="lazy"
         alt="linkedin logo"
       />
-      <span className="pt-0.5">Continue with Linkedin</span>
+      <span className="pt-0.5 text-sm pl-5">Continue with Linkedin</span>
     </button>
   );
 }
