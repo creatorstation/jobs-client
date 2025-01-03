@@ -35,17 +35,6 @@ export function SubmitForm({
 
   const onSubmit = (data: UserData) => {
     setIsSubmitting(true);
-
-    const dayMapping: Record<string, string> = {
-      Monday: "Pazartesi",
-      Tuesday: "Salı",
-      Wednesday: "Çarşamba",
-      Thursday: "Perşembe",
-      Friday: "Cuma",
-    };
-
-    const translatedWorkDays = data.workDays.map((day) => dayMapping[day]);
-
     updateUserData(data);
 
     const formData = new FormData();
@@ -59,6 +48,15 @@ export function SubmitForm({
     formData.append("position", positionName);
 
     if (nonFullTime) {
+      const dayMapping: Record<string, string> = {
+        Monday: "Pazartesi",
+        Tuesday: "Salı",
+        Wednesday: "Çarşamba",
+        Thursday: "Perşembe",
+        Friday: "Cuma",
+      };
+      const translatedWorkDays = data.workDays.map((day) => dayMapping[day]);
+
       formData.append(
         "mandatoryInternship",
         data.mandatoryInternship.toString()
@@ -210,7 +208,7 @@ export function SubmitForm({
         }}
       />
       {!isValidPh && (
-        <p className="text-red-500">Please enter a valid phone number.</p>
+        <p className="text-red-500 mb-6">Please enter a valid phone number.</p>
       )}
 
       <div
