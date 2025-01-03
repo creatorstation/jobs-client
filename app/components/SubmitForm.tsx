@@ -55,6 +55,8 @@ export function SubmitForm({ submitBtnText, positionName, nonFullTime = false }:
     resendCooldown: 0,
   });
 
+  const [checkingForCode, setCheckingForCode] = useState<boolean>(false);
+
   const [verificationTimer, setVerificationTimer] = useState<number>(0);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -194,16 +196,17 @@ export function SubmitForm({ submitBtnText, positionName, nonFullTime = false }:
         ...prev,
         codeSent: true,
         isVerifying: true,
-        resendCooldown: 10,
+        resendCooldown: 90,
       }));
-      setVerificationTimer(180);
+      setVerificationTimer(90);
     } catch (error) {
       console.error(error);
       toast('Failed to send verification code.', { type: 'error' });
     }
   };
 
-  const verifyCode = async () => {
+  const verifyCode = async (code: string) => {
+    setCheckingForCode(true);
     if (verificationTimer <= 0) {
       toast('Verification code has expired. Please resend.', { type: 'error' });
       return;
@@ -213,7 +216,7 @@ export function SubmitForm({ submitBtnText, positionName, nonFullTime = false }:
         'https://auto.creatorstation.com/webhook/0723c1ca-b5a6-41a7-bd57-e35d79c4a2ff',
         {
           phone: (userData as UserData).phone.replace(/\s/g, ''),
-          code: verification.code,
+          code: code,
         }
       );
 
@@ -241,12 +244,12 @@ export function SubmitForm({ submitBtnText, positionName, nonFullTime = false }:
       }));
       toast('Failed to verify code.', { type: 'error' });
     }
+
+    setCheckingForCode(false);
   };
 
   const handleResendCode = () => {
-    if (verification.resendCooldown === 0) {
-      sendVerificationCode();
-    }
+    sendVerificationCode();
   };
 
   useEffect(() => {
@@ -409,7 +412,7 @@ export function SubmitForm({ submitBtnText, positionName, nonFullTime = false }:
           <motion.button
             type="button"
             onClick={handleNext}
-            className={`w-full p-2 rounded ${
+            className={`w-64 p-2 rounded ${
               isValid ? 'bg-blue-500 text-white' : 'bg-[#e9e9ed] text-black cursor-not-allowed'
             }`}
             disabled={!isValid}
@@ -418,7 +421,7 @@ export function SubmitForm({ submitBtnText, positionName, nonFullTime = false }:
             whileTap="tap"
             transition={{ type: 'spring', stiffness: 100 }}
           >
-            Next
+            Apply
           </motion.button>
         </>
       )}
@@ -509,15 +512,21 @@ export function SubmitForm({ submitBtnText, positionName, nonFullTime = false }:
                         <motion.input
                           type="text"
                           value={verification.code}
-                          onChange={(e) =>
+                          onChange={(e) => {
+                            const code = e.target.value.replace(/\D/g, '');
                             setVerification((prev) => ({
                               ...prev,
-                              code: e.target.value,
-                            }))
-                          }
+                              code,
+                            }));
+                            if (code.length === 6) {
+                              verifyCode(code); // Pass the current 'code' to verifyCode
+                            }
+                          }}
                           className="w-full p-2 mb-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
                           placeholder="Enter 6-digit code"
                           maxLength={6}
+                          pattern="\d*"
+                          disabled={checkingForCode}
                           whileFocus={{ scale: 1.02 }}
                           transition={{ type: 'spring', stiffness: 100 }}
                         />
@@ -544,29 +553,18 @@ export function SubmitForm({ submitBtnText, positionName, nonFullTime = false }:
                           </motion.p>
                         )}
                         <div className="flex space-x-4">
-                          <motion.button
-                            type="button"
-                            onClick={verifyCode}
-                            className="px-4 py-2 bg-green-500 text-white rounded"
-                            whileHover={{ scale: 1.05 }}
-                            whileTap={{ scale: 0.95 }}
-                          >
-                            Verify
-                          </motion.button>
-                          <motion.button
-                            type="button"
-                            onClick={handleResendCode}
-                            className={`px-4 py-2 bg-gray-500 text-white rounded ${
-                              verification.resendCooldown > 0 ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'
-                            }`}
-                            disabled={verification.resendCooldown > 0}
-                            whileHover={verification.resendCooldown === 0 ? { scale: 1.05 } : {}}
-                            whileTap={verification.resendCooldown === 0 ? { scale: 0.95 } : {}}
-                          >
-                            {verification.resendCooldown > 0
-                              ? `Resend (${verification.resendCooldown}s)`
-                              : 'Resend Code'}
-                          </motion.button>
+                          {verification.error && (
+                            <motion.button
+                              type="button"
+                              disabled={checkingForCode}
+                              onClick={handleResendCode}
+                              className="px-4 py-2 bg-blue-500 text-white rounded disabled:opacity-50"
+                              whileHover={{ scale: 1.05 }}
+                              whileTap={{ scale: 0.95 }}
+                            >
+                              Resend Code
+                            </motion.button>
+                          )}
                         </div>
                       </motion.div>
                     )}
@@ -867,7 +865,7 @@ export function SubmitForm({ submitBtnText, positionName, nonFullTime = false }:
             whileTap="tap"
             transition={{ type: 'spring', stiffness: 100 }}
           >
-            {submitBtnText}
+            Submit your application
           </motion.button>
         </>
       )}
