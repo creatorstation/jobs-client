@@ -7,6 +7,7 @@ import axios from 'axios';
 import { useEffect } from 'react';
 import { AuthButtons } from '~/components/AuthButtons';
 import { appStore } from '~/store/app-store';
+import { handleLinkedInAuth } from '~/helpers/handleLinkedInLogin';
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -20,35 +21,15 @@ export function meta({}: Route.MetaArgs) {
 
 export default function SocialMediaIntern() {
   const { updateUserData } = userStore();
-  const { appData } = appStore();
+  const { appData, updateAppData } = appStore();
 
   useEffect(() => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const code = urlParams.get('code');
-
-    if (code) {
-      axios
-        .get('https://i4qbeevmo5.execute-api.us-east-1.amazonaws.com/v1/api/auth/linkedin', {
-          params: {
-            code,
-            redirect_uri: redirectUri,
-          },
-        })
-        .then((response) => {
-          const { data } = response;
-
-          updateUserData({ email: data.email, name: data.name });
-          toast('Signed in successfully!', { type: 'success' });
-        })
-        .catch((error) => {
-          window.history.replaceState({}, document.title, window.location.pathname);
-
-          window.location.reload();
-        });
-    }
+    handleLinkedInAuth(
+      typeof window !== 'undefined' ? `${window.location.origin}/social-media-intern` : '',
+      updateUserData,
+      updateAppData,
+    );
   }, []);
-
-  const redirectUri = typeof window !== 'undefined' ? `${window.location.origin}/social-media-intern` : '';
 
   return (
     <main className="max-w-4xl mx-auto p-6 bg-white shadow-md rounded-lg">
