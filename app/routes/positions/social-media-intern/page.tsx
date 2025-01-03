@@ -1,13 +1,11 @@
-import { GoogleLogin } from "@react-oauth/google";
 import { toast } from "react-toastify";
-import { jwtDecode } from "jwt-decode";
 
-import LinkedInLogin from "~/components/LinkedinButton";
 import type { Route } from "../social-media-manager/+types/page";
 import { userStore } from "~/store/user-store";
 import { SubmitForm } from "~/components/SubmitForm";
 import axios from "axios";
 import { useEffect } from "react";
+import { AuthButtons } from "~/components/AuthButtons";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -173,26 +171,7 @@ export default function SocialMediaIntern() {
             <div className="mb-4">
               <strong>To apply, please sign in below:</strong>
             </div>
-            <GoogleLogin
-              size="large"
-              onSuccess={(credentialResponse) => {
-                console.log(credentialResponse);
-                const decoded = jwtDecode<any>(
-                  credentialResponse.credential as string
-                );
-                updateUserData(decoded);
-                toast("Signed in successfully!", { type: "success" });
-              }}
-              onError={() => {
-                toast("An error occurred while signing in.", { type: "error" });
-              }}
-              useOneTap={true}
-              text="continue_with"
-            />
-
-            <div className="mt-4">
-              <LinkedInLogin redirPath="social-media-intern" />
-            </div>
+            <AuthButtons redirPath="social-media-intern" />
           </>
         ) : (
           <>
