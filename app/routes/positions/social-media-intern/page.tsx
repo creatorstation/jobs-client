@@ -2,12 +2,12 @@ import { GoogleLogin } from "@react-oauth/google";
 import { toast } from "react-toastify";
 import { jwtDecode } from "jwt-decode";
 
-import { useEffect } from "react";
-import axios from "axios";
 import LinkedInLogin from "~/components/LinkedinButton";
 import type { Route } from "../social-media-manager/+types/page";
 import { userStore } from "~/store/user-store";
 import { SubmitForm } from "~/components/SubmitForm";
+import axios from "axios";
+import { useEffect } from "react";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -26,6 +26,7 @@ export default function SocialMediaIntern() {
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const code = urlParams.get("code");
+
     if (code) {
       axios
         .get(
@@ -39,10 +40,8 @@ export default function SocialMediaIntern() {
         )
         .then((response) => {
           const { data } = response;
-          updateUserData({
-            email: data.email,
-            name: data.name,
-          });
+
+          updateUserData({ email: data.email, name: data.name });
           toast("Signed in successfully!", { type: "success" });
         })
         .catch((error) => {
@@ -51,6 +50,8 @@ export default function SocialMediaIntern() {
             document.title,
             window.location.pathname
           );
+
+          window.location.reload();
         });
     }
   }, []);
@@ -196,7 +197,11 @@ export default function SocialMediaIntern() {
         ) : (
           <>
             <hr className="my-8" />
-            <SubmitForm submitBtnText="Apply for Social Media Intern" positionName="Social Media Intern" nonFullTime />
+            <SubmitForm
+              submitBtnText="Apply for Social Media Intern"
+              positionName="Social Media Intern"
+              nonFullTime
+            />
           </>
         )}
       </div>
