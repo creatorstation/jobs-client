@@ -60,7 +60,7 @@ export function AuthButtons({ redirPath }: AuthButtonsProps) {
               loading="lazy"
               alt="linkedin logo"
             />
-            <span className="pt-0.5 text-sm pl-5">Continue with Google</span>
+            <span className="pt-0.5 text-sm w-full">Apply with Google</span>
           </button>
         </div>
       </div>
@@ -77,7 +77,7 @@ export function AuthButtons({ redirPath }: AuthButtonsProps) {
               loading="lazy"
               alt="linkedin logo"
             />
-            <span className="pt-0.5 text-sm pl-5">Continue with Linkedin</span>
+            <span className="pt-0.5 text-sm w-full">Apply with Linkedin</span>
           </button>
         </div>
       </div>
