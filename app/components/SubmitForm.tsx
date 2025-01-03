@@ -84,6 +84,13 @@ export function SubmitForm({ submitBtnText, positionName, nonFullTime = false }:
     }
   }, [userData, setValue]);
 
+  const handleInputChange = (field: keyof UserData, value: string) => {
+    // @ts-ignore
+    updateUserData({ ...userData, [field]: value });
+    setValue(field, value);
+    trigger(field);
+  };
+
   const onSubmit = (data: UserData) => {
     if (!verification.isValid) {
       toast('Please verify your phone number before submitting.', {
@@ -346,6 +353,10 @@ export function SubmitForm({ submitBtnText, positionName, nonFullTime = false }:
     }
   }, [userData, trigger]);
 
+  useEffect(() => {
+    console.log('userData:', userData);
+  }, [userData]);
+
   return (
     <motion.form
       onSubmit={handleSubmit(onSubmit)}
@@ -364,6 +375,7 @@ export function SubmitForm({ submitBtnText, positionName, nonFullTime = false }:
               placeholder="Your Name"
               whileFocus={{ scale: 1.02 }}
               transition={{ type: 'spring', stiffness: 100 }}
+              onChange={(e) => handleInputChange('name', e.target.value)}
             />
             <AnimatePresence>
               {errors.name && (
@@ -394,6 +406,7 @@ export function SubmitForm({ submitBtnText, positionName, nonFullTime = false }:
               placeholder="your.email@example.com"
               whileFocus={{ scale: 1.02 }}
               transition={{ type: 'spring', stiffness: 100 }}
+              onChange={(e) => handleInputChange('email', e.target.value)}
             />
             <AnimatePresence>
               {errors.email && (
@@ -811,7 +824,7 @@ export function SubmitForm({ submitBtnText, positionName, nonFullTime = false }:
                   variants={formVariants}
                 >
                   {['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'].map((day) => (
-                    <motion.label key={day} className="mb-4 md:mb-0 md:mr-4 flex items-center" variants={fieldVariants}>
+                    <motion.label key={day} className="mb-4 md:mb-0 md:mr-4 flex items-center mt-4" variants={fieldVariants}>
                       <motion.input
                         type="checkbox"
                         value={day}
