@@ -1,9 +1,7 @@
 import type { Route } from './+types/page';
-import { toast } from 'react-toastify';
 
 import { SubmitForm } from '~/components/SubmitForm';
 import { userStore } from '~/store/user-store';
-import axios from 'axios';
 import { useEffect } from 'react';
 import { AuthButtons } from '~/components/AuthButtons';
 import { appStore } from '~/store/app-store';
