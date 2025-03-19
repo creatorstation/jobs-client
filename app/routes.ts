@@ -11,4 +11,5 @@ export default [
   route('executive-assistant', 'routes/positions/executive-assistant/page.tsx'),
   route('talent-manager', 'routes/positions/talent-manager/page.tsx'),
   route('account-specialist', 'routes/positions/account-specialist/page.tsx'),
+  route('content-manager', 'routes/positions/content-manager/page.tsx'),
 ] satisfies RouteConfig;
