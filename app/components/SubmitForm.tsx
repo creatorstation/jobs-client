@@ -202,7 +202,7 @@ export function SubmitForm({ submitBtnText, positionName, nonFullTime = false }:
 
       const requestData: any = {
         phone: (userData as UserData).phone.replace(/\s/g, ''),
-        mail: true,
+        mail: newAttemptCount > 1,
         email: userData?.email || '',
       };
 
@@ -582,7 +582,7 @@ export function SubmitForm({ submitBtnText, positionName, nonFullTime = false }:
                           </motion.p>
                         )}
                         <div className="flex space-x-4">
-                          {verification.error && (
+                          {verification.error && verificationTimer <= 0 && (
                             <motion.button
                               type="button"
                               disabled={checkingForCode}
