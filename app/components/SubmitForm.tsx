@@ -39,6 +39,8 @@ export function SubmitForm({ submitBtnText, positionName, nonFullTime = false }:
     }
   };
 
+  const [verificationAttempts, setVerificationAttempts] = useState<number>(0);
+
   const [verification, setVerification] = useState<{
     isVerifying: boolean;
     codeSent: boolean;
@@ -178,7 +180,7 @@ export function SubmitForm({ submitBtnText, positionName, nonFullTime = false }:
         }
       }
     },
-    [setValue, trigger]
+    [setValue, trigger],
   );
 
   const fileInputRef = useRef<HTMLInputElement | null>(null);
@@ -195,10 +197,23 @@ export function SubmitForm({ submitBtnText, positionName, nonFullTime = false }:
 
   const sendVerificationCode = async () => {
     try {
-      await axios.post('https://auto.creatorstation.com/webhook/3ae84523-7d5f-40e4-b03b-84311b859ed7', {
+      const newAttemptCount = verificationAttempts + 1;
+      setVerificationAttempts(newAttemptCount);
+
+      const requestData: any = {
         phone: (userData as UserData).phone.replace(/\s/g, ''),
-      });
-      toast('Verification code sent!', { type: 'success' });
+        mail: true,
+        email: userData?.email || '',
+      };
+
+      await axios.post('https://auto.creatorstation.com/webhook/3ae84523-7d5f-40e4-b03b-84311b859ed7', requestData);
+
+      if (newAttemptCount === 1) {
+        toast('Verification code sent!', { type: 'success' });
+      } else {
+        toast('Verification code sent via WhatsApp and email!', { type: 'success' });
+      }
+
       setVerification((prev) => ({
         ...prev,
         codeSent: true,
@@ -224,7 +239,7 @@ export function SubmitForm({ submitBtnText, positionName, nonFullTime = false }:
         {
           phone: (userData as UserData).phone.replace(/\s/g, ''),
           code: code,
-        }
+        },
       );
 
       if (response.status === 200) {
@@ -519,8 +534,9 @@ export function SubmitForm({ submitBtnText, positionName, nonFullTime = false }:
                           exit={{ opacity: 0 }}
                           transition={{ duration: 0.5 }}
                         >
-                          We’ve sent a verification code via WhatsApp to {userData?.phone}. Please enter the code below
-                          to confirm it’s really you.
+                          {verificationAttempts >= 2
+                            ? `We've sent a verification code via WhatsApp and email to ${userData?.phone}. Please enter the code below to confirm it's really you.`
+                            : `We've sent a verification code via WhatsApp to ${userData?.phone}. Please enter the code below to confirm it's really you.`}
                         </motion.p>
                         <motion.input
                           type="text"
@@ -667,7 +683,7 @@ export function SubmitForm({ submitBtnText, positionName, nonFullTime = false }:
           </motion.div>
 
           <motion.div variants={fieldVariants} className="mb-4">
-            <label className="block mb-2">Do you live on Istanbul’s European side?</label>
+            <label className="block mb-2">Do you live on Istanbul's European side?</label>
             <motion.select
               {...register('europeSide', { required: 'This field is required.' })}
               className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
@@ -824,7 +840,11 @@ export function SubmitForm({ submitBtnText, positionName, nonFullTime = false }:
                   variants={formVariants}
                 >
                   {['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'].map((day) => (
-                    <motion.label key={day} className="mb-4 md:mb-0 md:mr-4 flex items-center mt-4" variants={fieldVariants}>
+                    <motion.label
+                      key={day}
+                      className="mb-4 md:mb-0 md:mr-4 flex items-center mt-4"
+                      variants={fieldVariants}
+                    >
                       <motion.input
                         type="checkbox"
                         value={day}
