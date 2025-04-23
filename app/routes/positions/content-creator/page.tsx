@@ -142,11 +142,11 @@ export default function ContentCreator() {
         <h2 className="text-2xl font-semibold mb-2">Your Role</h2>
         <ul className="list-disc list-inside space-y-1 text-gray-700">
           <li>
-            Plan & Organize: Manage video and social media content preparations, track timelines, and ensure seamless
+            Manage video and social media content preparations, track timelines, and ensure seamless
             execution.
           </li>
           <li>
-            Source & Manage Supplies: Handle procurement, returns, and organization of materials, including makeup and
+            Handle procurement, returns, and organization of materials, including makeup and
             beauty products.
           </li>
           <li>Be the Go-To Person: Support creators and filming crews with everything they need to succeed.</li>
