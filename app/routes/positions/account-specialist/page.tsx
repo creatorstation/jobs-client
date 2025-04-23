@@ -61,7 +61,8 @@ export default function AccountSpecialist() {
           managing and resolving any challenges that arise.
         </p>
       </section>
-      <section className="mb-6">
+      <div id="reqs">
+        <section className="mb-6">
         <h2 className="text-2xl font-semibold mb-2">Responsibilities</h2>
         <ul className="list-disc list-inside space-y-3 text-gray-700">
           <li>
@@ -105,6 +106,8 @@ export default function AccountSpecialist() {
           </li>
         </ul>
       </section>
+      
+      </div>
       <section className="mb-6">
         <h2 className="text-2xl font-semibold mb-2">Ready to Make Your Mark?</h2>
         <p className="text-gray-700">

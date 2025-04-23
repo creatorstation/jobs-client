@@ -63,7 +63,8 @@ export default function BusinessAnalyst() {
           ideas clearly to diverse stakeholders.
         </p>
       </section>
-      <section className="mb-6">
+      <div id="reqs">
+        <section className="mb-6">
         <h2 className="text-2xl font-semibold mb-2">Key Responsibilities</h2>
         <ul className="list-disc list-inside space-y-3 text-gray-700">
           <li>
@@ -117,9 +118,11 @@ export default function BusinessAnalyst() {
           </li>
         </ul>
       </section>
-      <section className="mb-6">
-        <h2 className="text-2xl font-semibold mb-2">Why Join Us?</h2>
-        <ul className="list-disc list-inside space-y-1 text-gray-700">
+      
+      </div>
+        <section className="mb-6">
+          <h2 className="text-2xl font-semibold mb-2">Why Join Us?</h2>
+          <ul className="list-disc list-inside space-y-1 text-gray-700">
           <li>
             <strong>Innovative Environment</strong>: Work at the forefront of digital content and influencer marketing,
             utilizing the latest AI, data training, and analytical tools.
