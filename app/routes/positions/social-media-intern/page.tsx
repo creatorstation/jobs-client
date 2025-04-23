@@ -65,35 +65,38 @@ export default function SocialMediaIntern() {
         </p>
       </section>
 
-      <section className="mb-6">
-        <h2 className="text-2xl font-semibold mb-2">Key Responsibilities</h2>
-        <ul className="list-disc list-inside space-y-1 text-gray-700">
-          <li>
-            Collaborate on the full content creation process: from brainstorming and planning to shooting, editing, and
-            posting.
-          </li>
-          <li>
-            Support in managing and scheduling content for our brand and business social media accounts (Instagram,
-            TikTok, LinkedIn).
-          </li>
-          <li>Assist in creating engaging photo and video content using smartphones or professional cameras.</li>
-          <li>
-            Monitor content performance and contribute to hitting targets for posts, views, likes, and follower growth.
-          </li>
-        </ul>
-      </section>
+      <div id="reqs">
+        <section className="mb-6">
+          <h2 className="text-2xl font-semibold mb-2">Key Responsibilities</h2>
+          <ul className="list-disc list-inside space-y-1 text-gray-700">
+            <li>
+              Collaborate on the full content creation process: from brainstorming and planning to shooting, editing,
+              and posting.
+            </li>
+            <li>
+              Support in managing and scheduling content for our brand and business social media accounts (Instagram,
+              TikTok, LinkedIn).
+            </li>
+            <li>Assist in creating engaging photo and video content using smartphones or professional cameras.</li>
+            <li>
+              Monitor content performance and contribute to hitting targets for posts, views, likes, and follower
+              growth.
+            </li>
+          </ul>
+        </section>
 
-      <section className="mb-6">
-        <h2 className="text-2xl font-semibold mb-2">Requirements</h2>
-        <ul className="list-disc list-inside space-y-1 text-gray-700">
-          <li>Availability to work a minimum of 4 full days per week in our Vadistanbul office.</li>
-          <li>A strong interest in social media, content creation, and digital marketing.</li>
-          <li>Familiarity with tools like Canva is a plus.</li>
-          <li>Strong communication and teamwork skills.</li>
-          <li>Fluent in Turkish with a good understanding of English.</li>
-          <li>Resides on the European side of Istanbul, preferably near Vadistanbul.</li>
-        </ul>
-      </section>
+        <section className="mb-6">
+          <h2 className="text-2xl font-semibold mb-2">Requirements</h2>
+          <ul className="list-disc list-inside space-y-1 text-gray-700">
+            <li>Availability to work a minimum of 4 full days per week in our Vadistanbul office.</li>
+            <li>A strong interest in social media, content creation, and digital marketing.</li>
+            <li>Familiarity with tools like Canva is a plus.</li>
+            <li>Strong communication and teamwork skills.</li>
+            <li>Fluent in Turkish with a good understanding of English.</li>
+            <li>Resides on the European side of Istanbul, preferably near Vadistanbul.</li>
+          </ul>
+        </section>
+      </div>
 
       <section className="mb-6">
         <h2 className="text-2xl font-semibold mb-2">What’s in It for You?</h2>

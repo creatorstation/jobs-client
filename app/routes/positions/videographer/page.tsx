@@ -1,8 +1,6 @@
 import type { Route } from './+types/page';
-import { toast } from 'react-toastify';
 
 import { useEffect } from 'react';
-import axios from 'axios';
 import { SubmitForm } from '~/components/SubmitForm';
 import { userStore } from '~/store/user-store';
 import { AuthButtons } from '~/components/AuthButtons';
@@ -24,7 +22,11 @@ export default function Videographer() {
   const { appData, updateAppData } = appStore();
 
   useEffect(() => {
-    handleLinkedInAuth(typeof window !== 'undefined' ? `${window.location.origin}/videographer` : '', updateUserData, updateAppData);
+    handleLinkedInAuth(
+      typeof window !== 'undefined' ? `${window.location.origin}/videographer` : '',
+      updateUserData,
+      updateAppData,
+    );
   }, []);
 
   return (
@@ -51,32 +53,34 @@ export default function Videographer() {
         </p>
       </section>
 
-      <section className="mb-6">
-        <h2 className="text-2xl font-semibold mb-2">Requirements</h2>
-        <ul className="list-disc list-inside space-y-1 text-gray-700">
-          <li>Bachelor’s or Master’s degree in related fields</li>
-          <li>At least 2 years of experience as a videographer, video editor, or VFX Artist</li>
-          <li>This is a full-time and on-site job. We are located in Vadistanbul.</li>
-          <li>Apply 2D compositing and green screen techniques to create compelling visual effects.</li>
-          <li>Proficiency in TikTok/Reels vertical video grammar and trend monitoring.</li>
-          <li>Knowledge of AI trends and applications in video production.</li>
-        </ul>
-      </section>
+      <div id="reqs">
+        <section className="mb-6">
+          <h2 className="text-2xl font-semibold mb-2">Requirements</h2>
+          <ul className="list-disc list-inside space-y-1 text-gray-700">
+            <li>Bachelor’s or Master’s degree in related fields</li>
+            <li>At least 2 years of experience as a videographer, video editor, or VFX Artist</li>
+            <li>This is a full-time and on-site job. We are located in Vadistanbul.</li>
+            <li>Apply 2D compositing and green screen techniques to create compelling visual effects.</li>
+            <li>Proficiency in TikTok/Reels vertical video grammar and trend monitoring.</li>
+            <li>Knowledge of AI trends and applications in video production.</li>
+          </ul>
+        </section>
 
-      <section className="mb-6">
-        <h2 className="text-2xl font-semibold mb-2">Responsibilities</h2>
-        <ul className="list-disc list-inside space-y-1 text-gray-700">
-          <li>Work with YouTubers and Brands to identify and pitch unique, engaging video content.</li>
-          <li>
-            Shoot (With Canon R & Cinema Series), edit, and produce online video content, ranging from big productions
-            to quick turnarounds.
-          </li>
-          <li>
-            Work with creators to define and shape video programming strategy and content for the related verticals.
-          </li>
-          <li>Manage multiple shoots and edits simultaneously.</li>
-        </ul>
-      </section>
+        <section className="mb-6">
+          <h2 className="text-2xl font-semibold mb-2">Responsibilities</h2>
+          <ul className="list-disc list-inside space-y-1 text-gray-700">
+            <li>Work with YouTubers and Brands to identify and pitch unique, engaging video content.</li>
+            <li>
+              Shoot (With Canon R & Cinema Series), edit, and produce online video content, ranging from big productions
+              to quick turnarounds.
+            </li>
+            <li>
+              Work with creators to define and shape video programming strategy and content for the related verticals.
+            </li>
+            <li>Manage multiple shoots and edits simultaneously.</li>
+          </ul>
+        </section>
+      </div>
 
       <section className="mb-6">
         <h2 className="text-2xl font-semibold mb-2">Qualifications</h2>

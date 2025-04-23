@@ -75,27 +75,29 @@ export default function ProductionAssistant() {
         </ul>
       </section>
 
-      <section className="mb-6">
-        <h2 className="text-2xl font-semibold mb-2">What We’re Looking For</h2>
-        <ul className="list-disc list-inside space-y-1 text-gray-700">
-          <li>
-            Social Media Enthusiast: You actively follow creators and stay tuned to the latest trends on YouTube,
-            Instagram, and TikTok.
-          </li>
-          <li>
-            Beauty & Makeup Pro: You’re familiar with makeup, beauty products, and the latest trends in the industry.
-          </li>
-          <li>
-            Reliable & Flexible: Available to work on-site in Istanbul, five days a week, with no domestic travel
-            restrictions.
-          </li>
-          <li>
-            Trend Savvy: You keep up with the latest on YouTube, Instagram, TikTok, and other social media platforms.
-          </li>
-          <li>Bilingual Advantage: Strong proficiency in English.</li>
-          <li>Location-Specific Requirement: Residing on the European side of Istanbul is required.</li>
-        </ul>
-      </section>
+      <div id="reqs">
+        <section className="mb-6">
+          <h2 className="text-2xl font-semibold mb-2">What We’re Looking For</h2>
+          <ul className="list-disc list-inside space-y-1 text-gray-700">
+            <li>
+              Social Media Enthusiast: You actively follow creators and stay tuned to the latest trends on YouTube,
+              Instagram, and TikTok.
+            </li>
+            <li>
+              Beauty & Makeup Pro: You’re familiar with makeup, beauty products, and the latest trends in the industry.
+            </li>
+            <li>
+              Reliable & Flexible: Available to work on-site in Istanbul, five days a week, with no domestic travel
+              restrictions.
+            </li>
+            <li>
+              Trend Savvy: You keep up with the latest on YouTube, Instagram, TikTok, and other social media platforms.
+            </li>
+            <li>Bilingual Advantage: Strong proficiency in English.</li>
+            <li>Location-Specific Requirement: Residing on the European side of Istanbul is required.</li>
+          </ul>
+        </section>
+      </div>
 
       <section className="mb-6">
         <h2 className="text-2xl font-semibold mb-2">Your Role</h2>

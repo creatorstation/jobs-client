@@ -1,17 +1,10 @@
-import { GoogleLogin } from '@react-oauth/google';
 import type { Route } from './+types/page';
-import { toast } from 'react-toastify';
-import { jwtDecode } from 'jwt-decode';
-import { useState, useEffect, useCallback, useRef } from 'react';
-import { useForm } from 'react-hook-form';
-import axios from 'axios';
-import { PhoneInput } from 'react-international-phone';
-import { isPhoneValid } from '~/helpers/isPhoneValid';
 import { SubmitForm } from '~/components/SubmitForm';
 import { AuthButtons } from '~/components/AuthButtons';
 import { userStore } from '~/store/user-store';
 import { appStore } from '~/store/app-store';
 import { handleLinkedInAuth } from '~/helpers/handleLinkedInLogin';
+import { useEffect } from 'react';
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -63,49 +56,53 @@ export default function SocialMediaManager() {
           both resonates with our followers and advances our clients’ goals. This role will involve working closely with
           influencers, creators, and our internal production team to deliver exceptional results.
         </p>
-        <h3 className="text-xl font-semibold mt-4">Key Responsibilities</h3>
-        <ul className="list-disc list-inside space-y-1 text-gray-700">
-          <li>
-            Strategic Planning & Execution: Develop and implement data-driven social media strategies across TikTok,
-            Instagram, and LinkedIn that align with our clients’ brand narratives and business objectives.
-          </li>
-          <li>
-            Content Oversight: Guide the end-to-end content lifecycle—from ideation and scripting to production and
-            publishing—ensuring the quality, consistency, and timeliness of all outputs.
-          </li>
-          <li>
-            Team Leadership: Manage and mentor a team of social media associates, content creators, and interns,
-            fostering a collaborative, high-performance environment.
-          </li>
-          <li>
-            Performance Analysis: Track and analyze key metrics (engagement, reach, follower growth) to refine
-            strategies, deliver actionable insights, and communicate results to stakeholders.
-          </li>
-          <li>
-            Influencer & Partner Relations: Work closely with top Turkish influencers and brand partners, negotiating
-            collaborations, overseeing campaigns, and ensuring optimal brand representation.
-          </li>
-        </ul>
-        <h3 className="text-xl font-semibold mt-4">Requirements</h3>
-        <ul className="list-disc list-inside space-y-1 text-gray-700">
-          <li>
-            Experience: A minimum of 3 years of professional experience in social media management, ideally within an
-            agency or brand environment.
-          </li>
-          <li>
-            Platform Expertise: Deep understanding of social platforms (Instagram, TikTok, LinkedIn) and emerging
-            trends.
-          </li>
-          <li>
-            Technical Skills: Proficiency with content creation tools (e.g., Canva) and familiarity with video and photo
-            editing software.
-          </li>
-          <li>
-            Communication & Leadership: Exceptional verbal and written communication skills in Turkish and a strong
-            command of English; proven ability to lead, inspire, and develop team members.
-          </li>
-          <li>Location: Full-time, onsite role at our Vadistanbul office (European side of Istanbul).</li>
-        </ul>
+
+        <section id="reqs">
+          <h3 className="text-xl font-semibold mt-4">Key Responsibilities</h3>
+          <ul className="list-disc list-inside space-y-1 text-gray-700">
+            <li>
+              Strategic Planning & Execution: Develop and implement data-driven social media strategies across TikTok,
+              Instagram, and LinkedIn that align with our clients’ brand narratives and business objectives.
+            </li>
+            <li>
+              Content Oversight: Guide the end-to-end content lifecycle—from ideation and scripting to production and
+              publishing—ensuring the quality, consistency, and timeliness of all outputs.
+            </li>
+            <li>
+              Team Leadership: Manage and mentor a team of social media associates, content creators, and interns,
+              fostering a collaborative, high-performance environment.
+            </li>
+            <li>
+              Performance Analysis: Track and analyze key metrics (engagement, reach, follower growth) to refine
+              strategies, deliver actionable insights, and communicate results to stakeholders.
+            </li>
+            <li>
+              Influencer & Partner Relations: Work closely with top Turkish influencers and brand partners, negotiating
+              collaborations, overseeing campaigns, and ensuring optimal brand representation.
+            </li>
+          </ul>
+          <h3 className="text-xl font-semibold mt-4">Requirements</h3>
+          <ul className="list-disc list-inside space-y-1 text-gray-700">
+            <li>
+              Experience: A minimum of 3 years of professional experience in social media management, ideally within an
+              agency or brand environment.
+            </li>
+            <li>
+              Platform Expertise: Deep understanding of social platforms (Instagram, TikTok, LinkedIn) and emerging
+              trends.
+            </li>
+            <li>
+              Technical Skills: Proficiency with content creation tools (e.g., Canva) and familiarity with video and
+              photo editing software.
+            </li>
+            <li>
+              Communication & Leadership: Exceptional verbal and written communication skills in Turkish and a strong
+              command of English; proven ability to lead, inspire, and develop team members.
+            </li>
+            <li>Location: Full-time, onsite role at our Vadistanbul office (European side of Istanbul).</li>
+          </ul>
+        </section>
+
         <h3 className="text-xl font-semibold mt-4">What’s in It for You?</h3>
         <ul className="list-disc list-inside space-y-1 text-gray-700">
           <li>

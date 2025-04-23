@@ -60,45 +60,51 @@ export default function TalentManager() {
           collaborations and resolving any challenges they may face.
         </p>
       </section>
-      <section className="mb-6">
-        <h2 className="text-2xl font-semibold mb-2">Responsibilities</h2>
-        <ul className="list-disc list-inside space-y-3 text-gray-700">
-          <li>
-            Act as a bridge between <strong>influencers and brands</strong>, managing projects from brief to reporting.
-          </li>
-          <li>
-            Support brands and influencers in <strong>creating high-quality, engaging branded content</strong> on social
-            media.
-          </li>
-          <li>
-            Ensure high levels of <strong>brand and influencer satisfaction</strong>, maintaining strong relationships.
-          </li>
-          <li>
-            Meet and exceed <strong>quarterly and annual growth targets</strong>.
-          </li>
-        </ul>
-      </section>
-      <section className="mb-6">
-        <h2 className="text-2xl font-semibold mb-2">Requirements </h2>
-        <ul className="list-disc list-inside space-y-3 text-gray-700">
-          <li>
-            <strong>Bachelor’s or Master’s degree</strong> in a related field.
-          </li>
-          <li>
-            <strong>At least 2 years of experience</strong> in influencer marketing, account management, or talent
-            management within a marketing, creative, or digital agency.
-          </li>
-          <li>
-            Strong <strong>interpersonal, communication, and presentation skills.</strong>
-          </li>
-          <li>
-            <strong>Fluency in Turkish (native-level)</strong> and <strong>strong English proficiency</strong>.
-          </li>
-          <li>
-            This is a <strong>full-time, on-site</strong> position based in <strong>Vadistanbul</strong>.
-          </li>
-        </ul>
-      </section>
+
+      <div id="reqs">
+        <section className="mb-6">
+          <h2 className="text-2xl font-semibold mb-2">Responsibilities</h2>
+          <ul className="list-disc list-inside space-y-3 text-gray-700">
+            <li>
+              Act as a bridge between <strong>influencers and brands</strong>, managing projects from brief to
+              reporting.
+            </li>
+            <li>
+              Support brands and influencers in <strong>creating high-quality, engaging branded content</strong> on
+              social media.
+            </li>
+            <li>
+              Ensure high levels of <strong>brand and influencer satisfaction</strong>, maintaining strong
+              relationships.
+            </li>
+            <li>
+              Meet and exceed <strong>quarterly and annual growth targets</strong>.
+            </li>
+          </ul>
+        </section>
+        <section className="mb-6">
+          <h2 className="text-2xl font-semibold mb-2">Requirements </h2>
+          <ul className="list-disc list-inside space-y-3 text-gray-700">
+            <li>
+              <strong>Bachelor’s or Master’s degree</strong> in a related field.
+            </li>
+            <li>
+              <strong>At least 2 years of experience</strong> in influencer marketing, account management, or talent
+              management within a marketing, creative, or digital agency.
+            </li>
+            <li>
+              Strong <strong>interpersonal, communication, and presentation skills.</strong>
+            </li>
+            <li>
+              <strong>Fluency in Turkish (native-level)</strong> and <strong>strong English proficiency</strong>.
+            </li>
+            <li>
+              This is a <strong>full-time, on-site</strong> position based in <strong>Vadistanbul</strong>.
+            </li>
+          </ul>
+        </section>
+      </div>
+
       <section className="mb-6">
         <h2 className="text-2xl font-semibold mb-2">Ready to Make Your Mark?</h2>
         <p className="text-gray-700">

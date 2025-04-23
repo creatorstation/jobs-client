@@ -47,27 +47,31 @@ export default function ContentManager() {
           yürütecektir.
         </p>
       </section>
-      <section className="mb-6">
-        <h2 className="text-2xl font-semibold mb-2">Temel Sorumluluklar</h2>
-        <ul className="list-disc list-inside space-y-3 text-gray-700">
-          <li>İçeriklerin oluşturulması için kapsamlı ön araştırmalar yapmak.</li>
-          <li>Prodüksiyona girecek içerikler için detaylı ve ilgi çekici senaryolar hazırlamak.</li>
-          <li>
-            Konuklarla iletişimi aktif ve etkili biçimde sağlayarak içerik detaylarını ve planlamaları koordine etmek.
-          </li>
-          <li>Tüm içerik hazırlıklarını zamanında tamamlayarak prodüksiyona hazır hale getirmek.</li>
-        </ul>
-      </section>
-      <section className="mb-6">
-        <h2 className="text-2xl font-semibold mb-2">Aranan Nitelikler</h2>
-        <ul className="list-disc list-inside space-y-3 text-gray-700">
-          <li>İyi derecede İngilizce bilgisi (yazılı ve sözlü).</li>
-          <li>Güçlü araştırma yeteneği ve bilgiyi sentezleme becerisi.</li>
-          <li>Organizasyon ve planlama konusunda yetkin.</li>
-          <li>Güçlü iletişim ve insan ilişkileri becerileri.</li>
-          <li>Ekip çalışmasına yatkın ve yoğun çalışma temposuna adapte olabilme yeteneği.</li>
-        </ul>
-      </section>
+
+      <div id="reqs">
+        <section className="mb-6">
+          <h2 className="text-2xl font-semibold mb-2">Temel Sorumluluklar</h2>
+          <ul className="list-disc list-inside space-y-3 text-gray-700">
+            <li>İçeriklerin oluşturulması için kapsamlı ön araştırmalar yapmak.</li>
+            <li>Prodüksiyona girecek içerikler için detaylı ve ilgi çekici senaryolar hazırlamak.</li>
+            <li>
+              Konuklarla iletişimi aktif ve etkili biçimde sağlayarak içerik detaylarını ve planlamaları koordine etmek.
+            </li>
+            <li>Tüm içerik hazırlıklarını zamanında tamamlayarak prodüksiyona hazır hale getirmek.</li>
+          </ul>
+        </section>
+        <section className="mb-6">
+          <h2 className="text-2xl font-semibold mb-2">Aranan Nitelikler</h2>
+          <ul className="list-disc list-inside space-y-3 text-gray-700">
+            <li>İyi derecede İngilizce bilgisi (yazılı ve sözlü).</li>
+            <li>Güçlü araştırma yeteneği ve bilgiyi sentezleme becerisi.</li>
+            <li>Organizasyon ve planlama konusunda yetkin.</li>
+            <li>Güçlü iletişim ve insan ilişkileri becerileri.</li>
+            <li>Ekip çalışmasına yatkın ve yoğun çalışma temposuna adapte olabilme yeteneği.</li>
+          </ul>
+        </section>
+      </div>
+
       <section className="mb-6">
         <h2 className="text-2xl font-semibold mb-2">Tercih Sebepleri</h2>
         <ul className="list-disc list-inside space-y-3 text-gray-700">

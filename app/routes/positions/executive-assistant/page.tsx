@@ -84,31 +84,33 @@ export default function ExecutiveAssistant() {
         </ul>
       </section>
 
-      <section className="mb-6">
-        <h2 className="text-2xl font-semibold mb-2">What We're Looking For</h2>
-        <ul className="list-disc list-inside space-y-1 text-gray-700">
-          <li>
-            <strong>Proactive Organizer:</strong> You excel in managing calendars, coordinating meetings, and following
-            up on tasks and projects with precision.
-          </li>
-          <li>
-            <strong>Effective Communicator:</strong> Fluent in English, you have strong written and verbal communication
-            skills, essential for liaising with the CEO and diverse teams.
-          </li>
-          <li>
-            <strong>Social Media Savvy:</strong> A solid understanding of social media trends and platforms is a must,
-            enabling you to support digital initiatives and engage effectively with content creators.
-          </li>
-          <li>
-            <strong>Detail-Oriented:</strong> Your attention to detail ensures that every project, meeting, and event
-            runs smoothly and deadlines are met.
-          </li>
-          <li>
-            <strong>Team Player:</strong> You thrive in collaborative settings and can seamlessly coordinate with
-            internal and external stakeholders.
-          </li>
-        </ul>
-      </section>
+      <div id="reqs">
+        <section className="mb-6">
+          <h2 className="text-2xl font-semibold mb-2">What We're Looking For</h2>
+          <ul className="list-disc list-inside space-y-1 text-gray-700">
+            <li>
+              <strong>Proactive Organizer:</strong> You excel in managing calendars, coordinating meetings, and
+              following up on tasks and projects with precision.
+            </li>
+            <li>
+              <strong>Effective Communicator:</strong> Fluent in English, you have strong written and verbal
+              communication skills, essential for liaising with the CEO and diverse teams.
+            </li>
+            <li>
+              <strong>Social Media Savvy:</strong> A solid understanding of social media trends and platforms is a must,
+              enabling you to support digital initiatives and engage effectively with content creators.
+            </li>
+            <li>
+              <strong>Detail-Oriented:</strong> Your attention to detail ensures that every project, meeting, and event
+              runs smoothly and deadlines are met.
+            </li>
+            <li>
+              <strong>Team Player:</strong> You thrive in collaborative settings and can seamlessly coordinate with
+              internal and external stakeholders.
+            </li>
+          </ul>
+        </section>
+      </div>
 
       <section className="mb-6">
         <h2 className="text-2xl font-semibold mb-2">Your Role</h2>
