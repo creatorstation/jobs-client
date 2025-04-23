@@ -535,8 +535,12 @@ export function SubmitForm({ submitBtnText, positionName, nonFullTime = false }:
                           transition={{ duration: 0.5 }}
                         >
                           {verificationAttempts >= 2
-                            ? `We've sent a verification code via WhatsApp and email to ${userData?.phone}. Please enter the code below to confirm it's really you.`
+                            ? `We've sent a verification code via WhatsApp and `
                             : `We've sent a verification code via WhatsApp to ${userData?.phone}. Please enter the code below to confirm it's really you.`}
+                          {verificationAttempts >= 2 && <strong>email</strong>}
+                          {verificationAttempts >= 2 && ` to ${userData?.phone} and to `}
+                          {verificationAttempts >= 2 && <strong>{userData?.email}</strong>}
+                          {verificationAttempts >= 2 && `. Please enter the code below to confirm it's really you.`}
                         </motion.p>
                         <motion.input
                           type="text"
