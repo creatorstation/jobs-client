@@ -883,12 +883,36 @@ export function SubmitForm({ submitBtnText, positionName, nonFullTime = false }:
                   <label className="block mb-2">Instagram hesabın:</label>
                   <motion.input
                     type="text"
-                    {...register('instagram')}
+                    {...register('instagram', {
+                      pattern: {
+                        value: /^[a-z0-9_.]{1,30}$/,
+                        message:
+                          'Geçerli bir Instagram kullanıcı adı giriniz (sadece küçük harfler, rakamlar, _ ve . karakterleri).',
+                      },
+                      setValueAs: (value: string) => value.toLowerCase(),
+                    })}
                     className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
                     placeholder="username"
                     whileFocus={{ scale: 1.02 }}
                     transition={{ type: 'spring', stiffness: 100 }}
+                    onChange={(e) => {
+                      const lowercaseValue = e.target.value.toLowerCase();
+                      e.target.value = lowercaseValue;
+                    }}
                   />
+                  <AnimatePresence>
+                    {errors.instagram && (
+                      <motion.p
+                        className="text-red-500 text-sm mt-1"
+                        variants={errorVariants}
+                        initial="hidden"
+                        animate="visible"
+                        exit="hidden"
+                      >
+                        {errors.instagram!.message}
+                      </motion.p>
+                    )}
+                  </AnimatePresence>
                 </motion.div>
               )}
 
