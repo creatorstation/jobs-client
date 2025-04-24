@@ -62,10 +62,11 @@ export function SubmitForm({ submitBtnText, positionName, nonFullTime = false }:
 
   // Function to check if a field should be rendered
   const shouldRenderField = (fieldName: string): boolean => {
-    if (!requiredFields[fieldName] || requiredFields[fieldName].length === 0) {
-      return false;
+    // Always show the field if it's in the requiredFields and includes the current path
+    if (requiredFields[fieldName] && requiredFields[fieldName].length > 0) {
+      return requiredFields[fieldName].includes(currentPath);
     }
-    return requiredFields[fieldName].includes(currentPath);
+    return false;
   };
 
   const { userData, updateUserData } = userStore();
@@ -95,14 +96,23 @@ export function SubmitForm({ submitBtnText, positionName, nonFullTime = false }:
   });
 
   const [checkingForCode, setCheckingForCode] = useState<boolean>(false);
-
   const [verificationTimer, setVerificationTimer] = useState<number>(0);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
-
   const [uploadProgress, setUploadProgress] = useState<number>(0);
   const [filePreview, setFilePreview] = useState<string | null>(null);
 
-  const [showAdditionalQuestions, setShowAdditionalQuestions] = useState<boolean>(true);
+  // Function to determine if additional questions should be shown
+  const shouldShowAdditionalQuestions = (): boolean => {
+    return verification.isValid; // Only show additional questions after verification
+  };
+
+  // Update showAdditionalQuestions state based on verification status
+  const [showAdditionalQuestions, setShowAdditionalQuestions] = useState<boolean>(false);
+
+  // Update showAdditionalQuestions when verification status changes
+  useEffect(() => {
+    setShowAdditionalQuestions(verification.isValid);
+  }, [verification.isValid]);
 
   const {
     register,
@@ -657,170 +667,171 @@ export function SubmitForm({ submitBtnText, positionName, nonFullTime = false }:
             )}
           </motion.div>
 
-          <motion.div variants={fieldVariants} className="mb-4" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-            <motion.div
-              className="p-4 border-dashed border-2 rounded cursor-pointer"
-              onDrop={handleDrop}
-              onDragOver={handleDragOver}
-              onClick={handleClick}
-              whileHover={{ backgroundColor: '#f0f4f8' }}
-              transition={{ duration: 0.3 }}
-            >
-              <input
-                type="file"
-                {...register('cv', { required: 'CV is required' })}
-                ref={fileInputRef}
-                className="hidden"
-                accept=".pdf, .docx"
-                onChange={(e) => {
-                  const files = e.target.files;
-                  if (files && files.length > 0) {
-                    const file = files[0];
-                    if (
-                      file.type === 'application/pdf' ||
-                      file.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
-                    ) {
-                      setValue('cv', files as unknown as FileList);
-                      trigger('cv');
-
-                      const reader = new FileReader();
-                      reader.onload = (e) => {
-                        setFilePreview(e.target?.result as string);
-                      };
-                      reader.readAsDataURL(file);
-                    } else {
-                      toast('Only PDF and DOCX files are supported.', {
-                        type: 'error',
-                      });
-                      e.target.value = '';
-                    }
-                  }
-                }}
-              />
-
-              <motion.p
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.2 }}
-                className="text-sm"
-              >
-                Upload your CV (PDF or DOC)
-                <br />
-                or drag and drop it here.
-              </motion.p>
-
-              <AnimatePresence>
-                {errors.cv && (
-                  <motion.p
-                    className="text-red-500 text-sm mt-1"
-                    variants={errorVariants}
-                    initial="hidden"
-                    animate="visible"
-                    exit="hidden"
-                  >
-                    {errors.cv!.message}
-                  </motion.p>
-                )}
-              </AnimatePresence>
-            </motion.div>
-
-            {filePreview && (
-              <div className="mt-2 mb-8">
-                <p>Preview:</p>
-                {filePreview?.startsWith('data:application/pdf') ? (
-                  <iframe src={filePreview as string} className="w-full h-64 border rounded" />
-                ) : (
-                  <p>File type not supported for preview.</p>
-                )}
-              </div>
-            )}
-          </motion.div>
-
-          <motion.div variants={fieldVariants} className="mb-4">
-            <label className="block mb-2">Do you live on Istanbul's European side?</label>
-            <motion.select
-              {...register('europeSide', { required: 'This field is required.' })}
-              className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
-              defaultValue=""
-              whileFocus={{ scale: 1.02 }}
-              transition={{ type: 'spring', stiffness: 100 }}
-            >
-              <option value="" disabled>
-                Select an option
-              </option>
-              <option value="Yes">Yes</option>
-              <option value="No">No</option>
-            </motion.select>
-            <AnimatePresence>
-              {errors.europeSide && (
-                <motion.p
-                  className="text-red-500 text-sm mt-1"
-                  variants={errorVariants}
-                  initial="hidden"
-                  animate="visible"
-                  exit="hidden"
-                >
-                  {errors.europeSide!.message}
-                </motion.p>
-              )}
-            </AnimatePresence>
-          </motion.div>
-
-          <motion.div variants={fieldVariants} className="mb-4">
-            <motion.input
-              type="text"
-              {...register('semt', { required: 'This field is required.' })}
-              className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
-              placeholder="Disctrict (e.g. Beşiktaş)"
-              whileFocus={{ scale: 1.02 }}
-              transition={{ type: 'spring', stiffness: 100 }}
-            />
-            <AnimatePresence>
-              {errors.semt && (
-                <motion.p
-                  className="text-red-500 text-sm mt-1"
-                  variants={errorVariants}
-                  initial="hidden"
-                  animate="visible"
-                  exit="hidden"
-                >
-                  {errors.semt!.message}
-                </motion.p>
-              )}
-            </AnimatePresence>
-          </motion.div>
-
-          <motion.div variants={fieldVariants} className="mb-4">
-            <motion.input
-              type="url"
-              {...register('linkedin', {
-                pattern: {
-                  value: /^(https?:\/\/)?([\w]+\.)?linkedin\.com\/.*$/,
-                  message: 'Enter a valid LinkedIn URL.',
-                },
-              })}
-              className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
-              placeholder="https://www.linkedin.com/in/yourprofile"
-              whileFocus={{ scale: 1.02 }}
-              transition={{ type: 'spring', stiffness: 100 }}
-            />
-            <AnimatePresence>
-              {errors.linkedin && (
-                <motion.p
-                  className="text-red-500 text-sm mt-1"
-                  variants={errorVariants}
-                  initial="hidden"
-                  animate="visible"
-                  exit="hidden"
-                >
-                  {errors.linkedin!.message}
-                </motion.p>
-              )}
-            </AnimatePresence>
-          </motion.div>
-
-          {showAdditionalQuestions && (
+          {/* Show all form fields only after verification */}
+          {verification.isValid && (
             <>
+              <motion.div variants={fieldVariants} className="mb-4" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+                <motion.div
+                  className="p-4 border-dashed border-2 rounded cursor-pointer"
+                  onDrop={handleDrop}
+                  onDragOver={handleDragOver}
+                  onClick={handleClick}
+                  whileHover={{ backgroundColor: '#f0f4f8' }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <input
+                    type="file"
+                    {...register('cv', { required: 'CV is required' })}
+                    ref={fileInputRef}
+                    className="hidden"
+                    accept=".pdf, .docx"
+                    onChange={(e) => {
+                      const files = e.target.files;
+                      if (files && files.length > 0) {
+                        const file = files[0];
+                        if (
+                          file.type === 'application/pdf' ||
+                          file.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+                        ) {
+                          setValue('cv', files as unknown as FileList);
+                          trigger('cv');
+
+                          const reader = new FileReader();
+                          reader.onload = (e) => {
+                            setFilePreview(e.target?.result as string);
+                          };
+                          reader.readAsDataURL(file);
+                        } else {
+                          toast('Only PDF and DOCX files are supported.', {
+                            type: 'error',
+                          });
+                          e.target.value = '';
+                        }
+                      }
+                    }}
+                  />
+
+                  <motion.p
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.2 }}
+                    className="text-sm"
+                  >
+                    Upload your CV (PDF or DOC)
+                    <br />
+                    or drag and drop it here.
+                  </motion.p>
+
+                  <AnimatePresence>
+                    {errors.cv && (
+                      <motion.p
+                        className="text-red-500 text-sm mt-1"
+                        variants={errorVariants}
+                        initial="hidden"
+                        animate="visible"
+                        exit="hidden"
+                      >
+                        {errors.cv!.message}
+                      </motion.p>
+                    )}
+                  </AnimatePresence>
+                </motion.div>
+
+                {filePreview && (
+                  <div className="mt-2 mb-8">
+                    <p>Preview:</p>
+                    {filePreview?.startsWith('data:application/pdf') ? (
+                      <iframe src={filePreview as string} className="w-full h-64 border rounded" />
+                    ) : (
+                      <p>File type not supported for preview.</p>
+                    )}
+                  </div>
+                )}
+              </motion.div>
+
+              <motion.div variants={fieldVariants} className="mb-4">
+                <label className="block mb-2">Do you live on Istanbul's European side?</label>
+                <motion.select
+                  {...register('europeSide', { required: 'This field is required.' })}
+                  className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+                  defaultValue=""
+                  whileFocus={{ scale: 1.02 }}
+                  transition={{ type: 'spring', stiffness: 100 }}
+                >
+                  <option value="" disabled>
+                    Select an option
+                  </option>
+                  <option value="Yes">Yes</option>
+                  <option value="No">No</option>
+                </motion.select>
+                <AnimatePresence>
+                  {errors.europeSide && (
+                    <motion.p
+                      className="text-red-500 text-sm mt-1"
+                      variants={errorVariants}
+                      initial="hidden"
+                      animate="visible"
+                      exit="hidden"
+                    >
+                      {errors.europeSide!.message}
+                    </motion.p>
+                  )}
+                </AnimatePresence>
+              </motion.div>
+
+              <motion.div variants={fieldVariants} className="mb-4">
+                <motion.input
+                  type="text"
+                  {...register('semt', { required: 'This field is required.' })}
+                  className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+                  placeholder="Disctrict (e.g. Beşiktaş)"
+                  whileFocus={{ scale: 1.02 }}
+                  transition={{ type: 'spring', stiffness: 100 }}
+                />
+                <AnimatePresence>
+                  {errors.semt && (
+                    <motion.p
+                      className="text-red-500 text-sm mt-1"
+                      variants={errorVariants}
+                      initial="hidden"
+                      animate="visible"
+                      exit="hidden"
+                    >
+                      {errors.semt!.message}
+                    </motion.p>
+                  )}
+                </AnimatePresence>
+              </motion.div>
+
+              <motion.div variants={fieldVariants} className="mb-4">
+                <motion.input
+                  type="url"
+                  {...register('linkedin', {
+                    pattern: {
+                      value: /^(https?:\/\/)?([\w]+\.)?linkedin\.com\/.*$/,
+                      message: 'Enter a valid LinkedIn URL.',
+                    },
+                  })}
+                  className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+                  placeholder="https://www.linkedin.com/in/yourprofile"
+                  whileFocus={{ scale: 1.02 }}
+                  transition={{ type: 'spring', stiffness: 100 }}
+                />
+                <AnimatePresence>
+                  {errors.linkedin && (
+                    <motion.p
+                      className="text-red-500 text-sm mt-1"
+                      variants={errorVariants}
+                      initial="hidden"
+                      animate="visible"
+                      exit="hidden"
+                    >
+                      {errors.linkedin!.message}
+                    </motion.p>
+                  )}
+                </AnimatePresence>
+              </motion.div>
+
               {shouldRenderField('salary_expectation') && (
                 <motion.div variants={fieldVariants} className="mb-4">
                   <label className="block mb-2">Bu pozisyon için maaş beklentin nedir?</label>
@@ -1013,125 +1024,126 @@ export function SubmitForm({ submitBtnText, positionName, nonFullTime = false }:
                   </AnimatePresence>
                 </motion.div>
               )}
+
+              {nonFullTime && (
+                <motion.div variants={fieldVariants} className="mb-4" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+                  <div className="mb-4">
+                    <label className="block mb-2">Do you have a mandatory internship?</label>
+                    <motion.select
+                      {...register('mandatoryInternship', {
+                        required: 'This field is required.',
+                      })}
+                      className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+                      defaultValue=""
+                      whileFocus={{ scale: 1.02 }}
+                      transition={{ type: 'spring', stiffness: 100 }}
+                    >
+                      <option value="" disabled>
+                        Select an option
+                      </option>
+                      <option value="true">Yes</option>
+                      <option value="false">No</option>
+                    </motion.select>
+                    <AnimatePresence>
+                      {errors.mandatoryInternship && (
+                        <motion.p
+                          className="text-red-500 text-sm mt-1"
+                          variants={errorVariants}
+                          initial="hidden"
+                          animate="visible"
+                          exit="hidden"
+                        >
+                          {errors.mandatoryInternship!.message}
+                        </motion.p>
+                      )}
+                    </AnimatePresence>
+                  </div>
+
+                  <div className="mb-4">
+                    <label className="block mb-2">Does your school provide your insurance?</label>
+                    <motion.select
+                      {...register('hasInsurance', {
+                        required: 'This field is required.',
+                      })}
+                      className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+                      defaultValue=""
+                      whileFocus={{ scale: 1.02 }}
+                      transition={{ type: 'spring', stiffness: 100 }}
+                    >
+                      <option value="" disabled>
+                        Select an option
+                      </option>
+                      <option value="true">Yes</option>
+                      <option value="false">No</option>
+                    </motion.select>
+                    <AnimatePresence>
+                      {errors.hasInsurance && (
+                        <motion.p
+                          className="text-red-500 text-sm mt-1"
+                          variants={errorVariants}
+                          initial="hidden"
+                          animate="visible"
+                          exit="hidden"
+                        >
+                          {errors.hasInsurance!.message}
+                        </motion.p>
+                      )}
+                    </AnimatePresence>
+                  </div>
+
+                  <div className="mb-4">
+                    <label className="block mb-2">Which days are you available to work?</label>
+                    <motion.div
+                      className="flex flex-col md:flex-row flex-wrap justify-center"
+                      initial="hidden"
+                      animate="visible"
+                      variants={formVariants}
+                    >
+                      {['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'].map((day) => (
+                        <motion.label
+                          key={day}
+                          className="mb-4 md:mb-0 md:mr-4 flex items-center mt-4"
+                          variants={fieldVariants}
+                        >
+                          <motion.input
+                            type="checkbox"
+                            value={day}
+                            {...register('workDays', {
+                              validate: (value) => value.length > 0 || 'At least one workday must be selected.',
+                            })}
+                            className="form-checkbox w-8 h-8 md:w-6 md:h-6"
+                            whileTap={{ scale: 0.95 }}
+                          />
+                          <motion.span
+                            className="ml-2 text-lg"
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            transition={{ delay: 0.1 }}
+                          >
+                            {day}
+                          </motion.span>
+                        </motion.label>
+                      ))}
+                    </motion.div>
+                    <AnimatePresence>
+                      {errors.workDays && (
+                        <motion.p
+                          className="text-red-500 text-sm mt-1"
+                          variants={errorVariants}
+                          initial="hidden"
+                          animate="visible"
+                          exit="hidden"
+                        >
+                          {errors.workDays!.message}
+                        </motion.p>
+                      )}
+                    </AnimatePresence>
+                  </div>
+                </motion.div>
+              )}
             </>
           )}
 
-          {nonFullTime && (
-            <motion.div variants={fieldVariants} className="mb-4" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-              <div className="mb-4">
-                <label className="block mb-2">Do you have a mandatory internship?</label>
-                <motion.select
-                  {...register('mandatoryInternship', {
-                    required: 'This field is required.',
-                  })}
-                  className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
-                  defaultValue=""
-                  whileFocus={{ scale: 1.02 }}
-                  transition={{ type: 'spring', stiffness: 100 }}
-                >
-                  <option value="" disabled>
-                    Select an option
-                  </option>
-                  <option value="true">Yes</option>
-                  <option value="false">No</option>
-                </motion.select>
-                <AnimatePresence>
-                  {errors.mandatoryInternship && (
-                    <motion.p
-                      className="text-red-500 text-sm mt-1"
-                      variants={errorVariants}
-                      initial="hidden"
-                      animate="visible"
-                      exit="hidden"
-                    >
-                      {errors.mandatoryInternship!.message}
-                    </motion.p>
-                  )}
-                </AnimatePresence>
-              </div>
-
-              <div className="mb-4">
-                <label className="block mb-2">Does your school provide your insurance?</label>
-                <motion.select
-                  {...register('hasInsurance', {
-                    required: 'This field is required.',
-                  })}
-                  className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
-                  defaultValue=""
-                  whileFocus={{ scale: 1.02 }}
-                  transition={{ type: 'spring', stiffness: 100 }}
-                >
-                  <option value="" disabled>
-                    Select an option
-                  </option>
-                  <option value="true">Yes</option>
-                  <option value="false">No</option>
-                </motion.select>
-                <AnimatePresence>
-                  {errors.hasInsurance && (
-                    <motion.p
-                      className="text-red-500 text-sm mt-1"
-                      variants={errorVariants}
-                      initial="hidden"
-                      animate="visible"
-                      exit="hidden"
-                    >
-                      {errors.hasInsurance!.message}
-                    </motion.p>
-                  )}
-                </AnimatePresence>
-              </div>
-
-              <div className="mb-4">
-                <label className="block mb-2">Which days are you available to work?</label>
-                <motion.div
-                  className="flex flex-col md:flex-row flex-wrap justify-center"
-                  initial="hidden"
-                  animate="visible"
-                  variants={formVariants}
-                >
-                  {['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'].map((day) => (
-                    <motion.label
-                      key={day}
-                      className="mb-4 md:mb-0 md:mr-4 flex items-center mt-4"
-                      variants={fieldVariants}
-                    >
-                      <motion.input
-                        type="checkbox"
-                        value={day}
-                        {...register('workDays', {
-                          validate: (value) => value.length > 0 || 'At least one workday must be selected.',
-                        })}
-                        className="form-checkbox w-8 h-8 md:w-6 md:h-6"
-                        whileTap={{ scale: 0.95 }}
-                      />
-                      <motion.span
-                        className="ml-2 text-lg"
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ delay: 0.1 }}
-                      >
-                        {day}
-                      </motion.span>
-                    </motion.label>
-                  ))}
-                </motion.div>
-                <AnimatePresence>
-                  {errors.workDays && (
-                    <motion.p
-                      className="text-red-500 text-sm mt-1"
-                      variants={errorVariants}
-                      initial="hidden"
-                      animate="visible"
-                      exit="hidden"
-                    >
-                      {errors.workDays!.message}
-                    </motion.p>
-                  )}
-                </AnimatePresence>
-              </div>
-            </motion.div>
-          )}
           <motion.button
             type="submit"
             className={`w-full p-2 rounded ${
