@@ -101,11 +101,6 @@ export function SubmitForm({ submitBtnText, positionName, nonFullTime = false }:
   const [uploadProgress, setUploadProgress] = useState<number>(0);
   const [filePreview, setFilePreview] = useState<string | null>(null);
 
-  // Function to determine if additional questions should be shown
-  const shouldShowAdditionalQuestions = (): boolean => {
-    return verification.isValid; // Only show additional questions after verification
-  };
-
   // Update showAdditionalQuestions state based on verification status
   const [showAdditionalQuestions, setShowAdditionalQuestions] = useState<boolean>(false);
 
