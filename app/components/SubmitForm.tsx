@@ -20,6 +20,13 @@ type UserData = {
   mandatoryInternship: boolean;
   hasInsurance: boolean;
   workDays: string[];
+  salaryExpectation?: string;
+  startDate?: string;
+  instagram?: string;
+  educationStatus?: string;
+  englishLevel?: string;
+  influencerMarketingExperience?: string;
+  brandExperience?: string;
 };
 
 export interface SubmitFormProps {
@@ -30,6 +37,36 @@ export interface SubmitFormProps {
 
 export function SubmitForm({ submitBtnText, positionName, nonFullTime = false }: SubmitFormProps) {
   const { appData, updateAppData } = appStore();
+
+  // State to store fields from API response
+  const [requiredFields, setRequiredFields] = useState<Record<string, string[]>>({});
+  const [currentPath, setCurrentPath] = useState<string>('');
+
+  useEffect(() => {
+    // Get the current URL path
+    const path = window.location.pathname;
+    const pathSegments = path.split('/').filter(Boolean);
+    const lastSegment = pathSegments[pathSegments.length - 1] || '';
+    setCurrentPath(lastSegment);
+
+    axios
+      .get('https://auto.creatorstation.com/webhook/83de1aba-17c8-4868-8f7d-be34b7d4feea')
+      .then((response) => {
+        console.log('Request sent successfully', response.data);
+        setRequiredFields(response.data);
+      })
+      .catch((error) => {
+        console.error('Error sending request:', error);
+      });
+  }, []);
+
+  // Function to check if a field should be rendered
+  const shouldRenderField = (fieldName: string): boolean => {
+    if (!requiredFields[fieldName] || requiredFields[fieldName].length === 0) {
+      return false;
+    }
+    return requiredFields[fieldName].includes(currentPath);
+  };
 
   const { userData, updateUserData } = userStore();
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
@@ -64,6 +101,8 @@ export function SubmitForm({ submitBtnText, positionName, nonFullTime = false }:
 
   const [uploadProgress, setUploadProgress] = useState<number>(0);
   const [filePreview, setFilePreview] = useState<string | null>(null);
+
+  const [showAdditionalQuestions, setShowAdditionalQuestions] = useState<boolean>(true);
 
   const {
     register,
@@ -113,6 +152,17 @@ export function SubmitForm({ submitBtnText, positionName, nonFullTime = false }:
     formData.append('cv', data.cv[0]);
     formData.append('linkedin', data.linkedin);
     formData.append('position', positionName);
+
+    if (showAdditionalQuestions) {
+      if (data.salaryExpectation) formData.append('salaryExpectation', data.salaryExpectation);
+      if (data.startDate) formData.append('startDate', data.startDate);
+      if (data.instagram) formData.append('instagram', data.instagram);
+      if (data.educationStatus) formData.append('educationStatus', data.educationStatus);
+      if (data.englishLevel) formData.append('englishLevel', data.englishLevel);
+      if (data.influencerMarketingExperience)
+        formData.append('influencerMarketingExperience', data.influencerMarketingExperience);
+      if (data.brandExperience) formData.append('brandExperience', data.brandExperience);
+    }
 
     if (nonFullTime) {
       const dayMapping: Record<string, string> = {
@@ -768,6 +818,203 @@ export function SubmitForm({ submitBtnText, positionName, nonFullTime = false }:
               )}
             </AnimatePresence>
           </motion.div>
+
+          {showAdditionalQuestions && (
+            <>
+              {shouldRenderField('salary_expectation') && (
+                <motion.div variants={fieldVariants} className="mb-4">
+                  <label className="block mb-2">Bu pozisyon için maaş beklentin nedir?</label>
+                  <motion.textarea
+                    {...register('salaryExpectation', { required: 'Bu alan zorunludur.' })}
+                    className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+                    placeholder="Maaş beklentinizi belirtiniz"
+                    rows={3}
+                    whileFocus={{ scale: 1.02 }}
+                    transition={{ type: 'spring', stiffness: 100 }}
+                  />
+                  <AnimatePresence>
+                    {errors.salaryExpectation && (
+                      <motion.p
+                        className="text-red-500 text-sm mt-1"
+                        variants={errorVariants}
+                        initial="hidden"
+                        animate="visible"
+                        exit="hidden"
+                      >
+                        {errors.salaryExpectation!.message}
+                      </motion.p>
+                    )}
+                  </AnimatePresence>
+                </motion.div>
+              )}
+
+              <motion.div variants={fieldVariants} className="mb-4">
+                <label className="block mb-2">Anlaşmamız durumunda hangi tarihte işe başlayabilirsin?</label>
+                <motion.input
+                  type="date"
+                  {...register('startDate', { required: 'Bu alan zorunludur.' })}
+                  className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+                  whileFocus={{ scale: 1.02 }}
+                  transition={{ type: 'spring', stiffness: 100 }}
+                />
+                <AnimatePresence>
+                  {errors.startDate && (
+                    <motion.p
+                      className="text-red-500 text-sm mt-1"
+                      variants={errorVariants}
+                      initial="hidden"
+                      animate="visible"
+                      exit="hidden"
+                    >
+                      {errors.startDate!.message}
+                    </motion.p>
+                  )}
+                </AnimatePresence>
+              </motion.div>
+
+              {shouldRenderField('instagram_account') && (
+                <motion.div variants={fieldVariants} className="mb-4">
+                  <label className="block mb-2">Instagram hesabın:</label>
+                  <motion.input
+                    type="text"
+                    {...register('instagram')}
+                    className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+                    placeholder="username"
+                    whileFocus={{ scale: 1.02 }}
+                    transition={{ type: 'spring', stiffness: 100 }}
+                  />
+                </motion.div>
+              )}
+
+              {shouldRenderField('education_status') && (
+                <motion.div variants={fieldVariants} className="mb-4">
+                  <label className="block mb-2">Eğitim Durumun (Üniversite)</label>
+                  <motion.select
+                    {...register('educationStatus', { required: 'Bu alan zorunludur.' })}
+                    className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+                    defaultValue=""
+                    whileFocus={{ scale: 1.02 }}
+                    transition={{ type: 'spring', stiffness: 100 }}
+                  >
+                    <option value="" disabled>
+                      Seçiniz
+                    </option>
+                    <option value="Devam Ediyor">Devam Ediyor</option>
+                    <option value="Mezun Oldum">Mezun Oldum</option>
+                    <option value="Bu Yıl Mezun Oluyorum">Bu Yıl Mezun Oluyorum</option>
+                  </motion.select>
+                  <AnimatePresence>
+                    {errors.educationStatus && (
+                      <motion.p
+                        className="text-red-500 text-sm mt-1"
+                        variants={errorVariants}
+                        initial="hidden"
+                        animate="visible"
+                        exit="hidden"
+                      >
+                        {errors.educationStatus!.message}
+                      </motion.p>
+                    )}
+                  </AnimatePresence>
+                </motion.div>
+              )}
+
+              {shouldRenderField('english_level') && (
+                <motion.div variants={fieldVariants} className="mb-4">
+                  <label className="block mb-2">İngilizce seviyen için 1 ve 5 arasında kaç puan verirsin?</label>
+                  <motion.select
+                    {...register('englishLevel', { required: 'Bu alan zorunludur.' })}
+                    className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+                    defaultValue=""
+                    whileFocus={{ scale: 1.02 }}
+                    transition={{ type: 'spring', stiffness: 100 }}
+                  >
+                    <option value="" disabled>
+                      Seçiniz
+                    </option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                  </motion.select>
+                  <AnimatePresence>
+                    {errors.englishLevel && (
+                      <motion.p
+                        className="text-red-500 text-sm mt-1"
+                        variants={errorVariants}
+                        initial="hidden"
+                        animate="visible"
+                        exit="hidden"
+                      >
+                        {errors.englishLevel!.message}
+                      </motion.p>
+                    )}
+                  </AnimatePresence>
+                </motion.div>
+              )}
+
+              {shouldRenderField('influencer_marketing_projects') && (
+                <motion.div variants={fieldVariants} className="mb-4">
+                  <label className="block mb-2">
+                    Daha önce Influencer Marketing projeleri gerçekleştirdin mi? Gerçekleştirdiysen en beğendiğin ya da
+                    ilk aklına gelen proje/projeler nedir?
+                  </label>
+                  <motion.textarea
+                    {...register('influencerMarketingExperience', { required: 'Bu alan zorunludur.' })}
+                    className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+                    placeholder="Deneyimlerinizi paylaşın"
+                    rows={4}
+                    whileFocus={{ scale: 1.02 }}
+                    transition={{ type: 'spring', stiffness: 100 }}
+                  />
+                  <AnimatePresence>
+                    {errors.influencerMarketingExperience && (
+                      <motion.p
+                        className="text-red-500 text-sm mt-1"
+                        variants={errorVariants}
+                        initial="hidden"
+                        animate="visible"
+                        exit="hidden"
+                      >
+                        {errors.influencerMarketingExperience!.message}
+                      </motion.p>
+                    )}
+                  </AnimatePresence>
+                </motion.div>
+              )}
+
+              {shouldRenderField('brief_to_report_service_for_a_brand') && (
+                <motion.div variants={fieldVariants} className="mb-4">
+                  <label className="block mb-2">
+                    Brieften raporlamaya kadar baştan sona hizmet verdiğin ya da süreçlerinde bulunduğun bir marka var
+                    mı?
+                  </label>
+                  <motion.textarea
+                    {...register('brandExperience', { required: 'Bu alan zorunludur.' })}
+                    className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+                    placeholder="Marka deneyimlerinizi paylaşın"
+                    rows={4}
+                    whileFocus={{ scale: 1.02 }}
+                    transition={{ type: 'spring', stiffness: 100 }}
+                  />
+                  <AnimatePresence>
+                    {errors.brandExperience && (
+                      <motion.p
+                        className="text-red-500 text-sm mt-1"
+                        variants={errorVariants}
+                        initial="hidden"
+                        animate="visible"
+                        exit="hidden"
+                      >
+                        {errors.brandExperience!.message}
+                      </motion.p>
+                    )}
+                  </AnimatePresence>
+                </motion.div>
+              )}
+            </>
+          )}
 
           {nonFullTime && (
             <motion.div variants={fieldVariants} className="mb-4" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
