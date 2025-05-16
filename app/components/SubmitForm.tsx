@@ -1,13 +1,13 @@
 import axios from 'axios';
+import { AnimatePresence, motion } from 'framer-motion';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { FaCheckCircle } from 'react-icons/fa';
 import { PhoneInput } from 'react-international-phone';
 import { toast } from 'react-toastify';
 import { isPhoneValid } from '~/helpers/isPhoneValid';
-import { userStore } from '~/store/user-store';
-import { motion, AnimatePresence } from 'framer-motion';
-import { FaCheckCircle } from 'react-icons/fa';
 import { appStore } from '~/store/app-store';
+import { userStore } from '~/store/user-store';
 
 type UserData = {
   name: string;
@@ -827,7 +827,7 @@ export function SubmitForm({ submitBtnText, positionName, nonFullTime = false }:
                 </AnimatePresence>
               </motion.div>
 
-              {shouldRenderField('salary_expectation') && (
+              {shouldRenderField('salary_expectation') && !positionName.toLowerCase().includes('intern') && (
                 <motion.div variants={fieldVariants} className="mb-4">
                   <label className="block mb-2">Bu pozisyon için maaş beklentin nedir?</label>
                   <motion.textarea
