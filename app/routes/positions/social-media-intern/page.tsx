@@ -14,7 +14,7 @@ export function meta({}: Route.MetaArgs) {
     { title: 'CreatorStation | Social Media Intern' },
     {
       name: 'description',
-      content: 'Join CreatorStation as a Social Media Intern and contribute to top Turkish YouTube channels!',
+      content: 'Join CreatorStation as a Social Media & Talent Management  Intern and contribute to top Turkish YouTube channels!',
     },
   ];
 }
@@ -35,12 +35,9 @@ export default function SocialMediaIntern() {
     <main className="max-w-4xl mx-auto p-6 bg-white shadow-md rounded-lg">
       <h1 className="text-3xl font-bold mb-4 text-center">Social Media Intern</h1>
       <section className="mb-6">
-        <p className="text-gray-700">
-          Are you ready to kickstart your career in the exciting world of influencer marketing, talent management, and
-          social media production? CreatorStation, the leading agency managing Turkey’s top social media channels and
-          creating engaging original content across entertainment, education, style, beauty, and travel, is looking for
-          passionate individuals to join our team!
-        </p>
+      <p className="text-gray-700">
+    Are you looking for a long-term summer internship in the exciting world of influencer marketing, talent management, and social media production? CreatorStation, the leading agency managing Turkey’s top social media channels and creating engaging original content across entertainment, education, style, beauty, and travel, is looking for passionate individuals to join our team from <strong>June to September</strong>!
+         </p>
         <p className="text-gray-700 mt-4">
           Why Intern at CreatorStation? At CreatorStation, we believe in learning by doing. As an intern, you’ll dive
           headfirst into the dynamic world of social media, gaining hands-on experience and working alongside a talented
@@ -69,26 +66,19 @@ export default function SocialMediaIntern() {
         <section className="mb-6">
           <h2 className="text-2xl font-semibold mb-2">Key Responsibilities</h2>
           <ul className="list-disc list-inside space-y-1 text-gray-700">
-            <li>
-              Collaborate on the full content creation process: from brainstorming and planning to shooting, editing,
-              and posting.
-            </li>
-            <li>
-              Support in managing and scheduling content for our brand and business social media accounts (Instagram,
-              TikTok, LinkedIn).
-            </li>
-            <li>Assist in creating engaging photo and video content using smartphones or professional cameras.</li>
-            <li>
-              Monitor content performance and contribute to hitting targets for posts, views, likes, and follower
-              growth.
-            </li>
+          <li>Assist in creating social media content that highlights daily life, culture, and behind-the-scenes moments at the office.</li>
+          <li>Help plan and organize in-office events and influencer visits to strengthen our talent community.</li>
+          <li>Communicate with influencers and talents to coordinate collaborations, visits, and creative opportunities.</li>
+          <li>Contribute to content production for our social media platforms (Instagram, TikTok, LinkedIn), including shooting and editing photo/video content.</li>
+          <li>Support scheduling and publishing content across our accounts, ensuring consistency and brand alignment.</li>
+          <li>Track basic performance metrics and suggest ideas to boost engagement and follower growth.</li>
           </ul>
         </section>
 
         <section className="mb-6">
           <h2 className="text-2xl font-semibold mb-2">Requirements</h2>
           <ul className="list-disc list-inside space-y-1 text-gray-700">
-            <li>Availability to work a minimum of 4 full days per week in our Vadistanbul office.</li>
+            <li>Availability to work a minimum of 5 full days per week in our Vadistanbul office.</li>
             <li>A strong interest in social media, content creation, and digital marketing.</li>
             <li>Familiarity with tools like Canva is a plus.</li>
             <li>Strong communication and teamwork skills.</li>
